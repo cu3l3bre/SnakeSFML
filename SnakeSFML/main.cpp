@@ -16,6 +16,8 @@
 #include "snake.h"
 #include "level.h"
 
+#include "time.h"
+
 using namespace std;
 
 int main()
@@ -181,13 +183,13 @@ int main()
 	boundary2.setPosition(pointx+10 - offset, pointy - offset);
 	boundary2.setFillColor(sf::Color::Green);
 	*/
-/*
+	/*
 	sf::Font font;
 	if (!font.loadFromFile("arial.ttf"))
 	{
 		// error...
 	}
-*/
+	*/
 
 	/*
 	sf::Text text;
@@ -290,8 +292,12 @@ int main()
 
 		if (!lvl1.foodOnField)
 		{
+			// limits 15 is possible
+			// 485
 			lvl1.generateFood();
 			lvl1.foodOnField = true;
+			//lvl1.foodLocation.col = 485;	// test
+			//lvl1.foodLocation.row = 15;
 			cout << lvl1.foodLocation.col << endl;	// test
 			cout << lvl1.foodLocation.row << endl;	// test
 		}

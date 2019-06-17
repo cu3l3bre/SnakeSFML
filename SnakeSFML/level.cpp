@@ -168,16 +168,16 @@ void Level::generateFood()
 		// thats why we add +1 and we get numbers from 1 to 8 which are in the field
 
 
-		foodLocation.row = ((rand() % 99)+ 1)*5;		// -2 because we dont want to spawn it on the boundaries
+		foodLocation.row = ((rand() % 95)+ 3)*5;		// -2 because we dont want to spawn it on the boundaries
 		if ((foodLocation.row % 10) == 0)
 		{
-			foodLocation.row = +5;
+			foodLocation.row += 5;
 		}
 
-		foodLocation.col = ((rand() % 99)+ 1)*5;
+		foodLocation.col = ((rand() % 95)+ 3)*5;
 		if ((foodLocation.col % 10) == 0)
 		{
-			foodLocation.col = +5;
+			foodLocation.col += 5;
 		}
 
 		// check if food has been generated on snake
