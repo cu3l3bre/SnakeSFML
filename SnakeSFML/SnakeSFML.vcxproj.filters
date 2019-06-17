@@ -24,12 +24,18 @@
     <ClCompile Include="level.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="point.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="snake.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="level.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="point.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

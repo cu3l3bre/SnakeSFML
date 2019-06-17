@@ -13,10 +13,18 @@
 #include <vector>
 #include "sqlite3.h"
 
+#include "snake.h"
+#include "level.h"
+
 using namespace std;
 
 int main()
 {
+	// start RNG with actual time
+	srand(time(0));
+
+#pragma region Sql
+
 
 	// öffnen der Datenabnk
 
@@ -96,39 +104,83 @@ int main()
 
 	// anzeige aller Daten in der tablle highscore
 
+#pragma endregion
 
 
 
+	const float FPS = 8.0f; //The desired FPS. (The number of updates each second).
+
+	
+	
 
 
+	sf::RenderWindow window(sf::VideoMode(500, 515), "Snake Game using SFML!");
+	window.setFramerateLimit(FPS);
 
-	sf::RenderWindow window(sf::VideoMode(500, 500), "Snake Game using SFML!");
+	//Snake lvl1.snake;
+	Level lvl1;
 
 
+	sf::CircleShape head;
+	head.setRadius(5.f);
+	head.setFillColor(sf::Color::Red);
+	head.setPosition(lvl1.snake.location.row, lvl1.snake.location.row);
 
-	sf::CircleShape head(20.f);
-	head.setFillColor(sf::Color::Green);
-	head.setPosition(0, 0);
-
-	sf::CircleShape body(20.f);
+	
+	sf::CircleShape body;
+	body.setRadius(5.f);
 	body.setFillColor(sf::Color::Red);
 	body.setPosition(100, 100);
 
 
+	sf::CircleShape food;
+	food.setRadius(5.f);
+	food.setFillColor(sf::Color::Yellow);
+	//food.setPosition(100, 100);
+
+
+
+
+	sf::Vector2f rectangleSize;
+	rectangleSize.x = 10;
+	rectangleSize.y = 10;
+
+	sf::RectangleShape boundary;
+	boundary.setSize(rectangleSize);
+	boundary.setFillColor(sf::Color::Red);
+	boundary.setPosition(100, 100);
+	
+
+
+	sf::CircleShape newBodyPart();
+	//sf::CircleShape newBodyPart(20.f);
+
+
+	/*
 	sf::CircleShape snake[10];
 	snake[0].setRadius(20.f);
 	
 
 	sf::RectangleShape boundary;
+	sf::RectangleShape boundary2;
 	
 	sf::Vector2f test;
-	test.x = 20;
-	test.y = 20;
+	test.x = 10;
+	test.y = 10;
+	
+	int offset = 5;
+
+	int pointx = 5;
+	int pointy = 5;
 
 	boundary.setSize(test);
-	boundary.setPosition(-10, -10);
+	boundary.setPosition(pointx-offset,pointy-offset);
 	boundary.setFillColor(sf::Color::Red);
 
+	boundary2.setSize(test);
+	boundary2.setPosition(pointx+10 - offset, pointy - offset);
+	boundary2.setFillColor(sf::Color::Green);
+	*/
 /*
 	sf::Font font;
 	if (!font.loadFromFile("arial.ttf"))
@@ -137,6 +189,7 @@ int main()
 	}
 */
 
+	/*
 	sf::Text text;
 
 	//text.setFont(font);
@@ -144,8 +197,11 @@ int main()
 	text.setCharacterSize(24);
 	text.setFillColor(sf::Color::Red);
 	text.setStyle(sf::Text::Bold | sf::Text::Underlined);
+	*/
 
 	vector<sf::CircleShape> snakebody;
+	vector<sf::RectangleShape> boundaries;
+
 	/*
 	
 	sf::CircleShape newBodyPart(20.f);
@@ -159,82 +215,165 @@ int main()
 
 	sf::Time timeTest = sf::seconds(0.25);
 
+	bool DirectionHasBeenSet = false;
+
+
+
+	for (int i = 5; i <= 495; i += 5)
+	{
+		for (int j = 5; j <= 495; j += 5)
+		{
+			if((i == 5) || (j == 5) || (i == 495) || (j == 495))
+			{
+				boundary.setPosition(i-5, j-5);
+				boundaries.push_back(boundary);
+			}
+		}
+	}
+
+	bool gameOver = false;
+	//lvl1.foodOnField = false;
+
 	while (window.isOpen())
 	{
 	
 
 
-		sf::sleep(timeTest);
+		//sf::sleep(timeTest);
 		//cout << "Loop" << endl;
+		DirectionHasBeenSet = false;
+
 
 		sf::Event event;
 		while (window.pollEvent(event))
 		{
-			if (event.type == sf::Event::Closed)
+			if ((event.type == sf::Event::Closed))
 			{
 				window.close();
 			}
 		}
 
 		// will be executed as long as the button is pressed
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) && !sf::Keyboard::isKeyPressed(sf::Keyboard::D))
 		{
-
-			head.setFillColor(sf::Color::Green);
-			body.setFillColor(sf::Color::Red);
-
-			testflag++;
-			
-			if (testflag == 1)
+			if (!DirectionHasBeenSet)
 			{
-				
-				sf::CircleShape newBodyPart(20.f);
-				newBodyPart.setFillColor(sf::Color::Green);
-				newBodyPart.setPosition(x, y);
-				snakebody.push_back(newBodyPart);
-				x += 20;
-				y += 20;
+				lvl1.snake.direction -= 1;
+				DirectionHasBeenSet = true;
 			}
 		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
-		{
-			head.setFillColor(sf::Color::Red);
-			body.setFillColor(sf::Color::Green);
-			cout << snakebody.size() << endl;
-			testflag = 0;
 
+		else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::A) && sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+		{
+			if (!DirectionHasBeenSet)
+			{
+				lvl1.snake.direction += 1;
+				DirectionHasBeenSet = true;
+			}
+		}
+		else
+		{
+			// direction remains as it is
 		}
 
 
-		if (!sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+		// Check for Overflow
+		if (lvl1.snake.direction == -1)
 		{
-			testflag = 0;
+			lvl1.snake.direction = 3;
+		}
+		else if (lvl1.snake.direction == 4)
+		{
+			lvl1.snake.direction = 0;
 		}
 		
 
-		sf::CircleShape newBodyPart(20.f);
-		newBodyPart.setFillColor(sf::Color::Green);
-		newBodyPart.setPosition(x, y);
-		snakebody.push_back(newBodyPart);
-		x += 30;
-		y += 30;
+		if (!lvl1.foodOnField)
+		{
+			lvl1.generateFood();
+			lvl1.foodOnField = true;
+			cout << lvl1.foodLocation.col << endl;	// test
+			cout << lvl1.foodLocation.row << endl;	// test
+		}
 
 
+
+		// Check if snake has found some food and let it grow
+		if ((lvl1.foodLocation.row == lvl1.snake.snakePoints[0].row) && (lvl1.foodLocation.col == lvl1.snake.snakePoints[0].col))
+		{
+			lvl1.eatFood();
+			cout << "yum" << endl;
+		}
+
+
+
+		lvl1.snake.updateSnake();
+
+		// write new point vlaue in 0
+		switch (lvl1.snake.direction)
+		{
+		case SnakeUp: lvl1.snake.snakePoints[0].row -= 10; break;
+		case SnakeRight: lvl1.snake.snakePoints[0].col +=10; break;
+		case SnakeDown: lvl1.snake.snakePoints[0].row += 10; break;
+		case SnakeLeft: lvl1.snake.snakePoints[0].col -=10; break;
+		default:break;
+		}
+
+
+
+
+
+		head.setPosition(lvl1.snake.snakePoints[0].col - 5, lvl1.snake.snakePoints[0].row - 5);
+
+
+		for (int i = 1; i < lvl1.snake.snakePoints.size(); i++)
+		{
+			body.setRadius(5.f);
+			body.setFillColor(sf::Color::Green);
+			body.setPosition(lvl1.snake.snakePoints[i].col-5, lvl1.snake.snakePoints[i].row-5);
+			snakebody.push_back(body);
+		}
+
+
+		food.setPosition(lvl1.foodLocation.col - 5, lvl1.foodLocation.row - 5);
+
+		// Draw Items inside the window
 		window.clear();
 
 
 		window.draw(head);
-		window.draw(body);
+		
+		/*window.draw(body);
 		window.draw(text);
 		window.draw(boundary);
-
+		window.draw(boundary2);
+		*/
 
 		for (int i = 0; i < snakebody.size(); i++)
 		{
 			window.draw(snakebody[i]);
 		}
 
+		window.draw(food);
+
+		for (int i = 0; i < boundaries.size(); i++)
+		{
+			window.draw(boundaries[i]);
+		}
+		
 		window.display();
+
+		snakebody.clear();
+
+		gameOver = lvl1.checkGameOver();
+
+		if (gameOver)
+		{
+			cout << "GameOver" << endl;
+			//system("pause");
+			window.close();
+		}
+
 	}
 
 	return 0;
