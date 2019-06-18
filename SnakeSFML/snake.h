@@ -8,7 +8,9 @@
 #pragma once
 
 #include "point.h"
-#include "vector"
+#include <vector>
+#include <SFML/Graphics.hpp>
+#include <SFML/System.hpp>
 
 
 // Enum for Movement directions for the snake
@@ -45,7 +47,16 @@ public:
 	Point location;
 	std::vector<Point> snakePoints;
 
+
+	sf::CircleShape head;
+	sf::CircleShape body;
+	std::vector<sf::CircleShape> snakebody;
+
+
+
+
 	Snake();
 	~Snake();
 	void updateSnake();
+	void setSnakeDirection();
 };

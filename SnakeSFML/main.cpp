@@ -123,15 +123,16 @@ int main()
 
 
 	// create the shape for the snake head
-	sf::CircleShape head;
-	head.setRadius(5.f);
-	head.setFillColor(sf::Color::Red);
+	//sf::CircleShape head;
+	//head.setRadius(5.f);
+	//head.setFillColor(sf::Color::Red);
 
 
 	// create the shape for the snake body
-	sf::CircleShape body;
-	body.setRadius(5.f);
-	body.setFillColor(sf::Color::Green);
+	
+	//sf::CircleShape body;
+	//body.setRadius(5.f);
+	//body.setFillColor(sf::Color::Green);
 
 
 	// create the shape for the food
@@ -171,7 +172,7 @@ int main()
 
 
 	// create a vector of circleshapes which represent the snakebody
-	vector<sf::CircleShape> snakebody;
+	//vector<sf::CircleShape> snakebody;
 	
 	// create a vecotor which stores all boundaries around the field
 	//vector<sf::RectangleShape> boundaries;
@@ -271,6 +272,10 @@ int main()
 			// update the snake values
 			lvl1.snake.updateSnake();
 
+			// set direction based on user input
+			lvl1.snake.setSnakeDirection();
+
+			/*
 			// write new point vlaue in 0
 			switch (lvl1.snake.direction)
 			{
@@ -281,20 +286,21 @@ int main()
 			default:break;
 			}
 
-
-
-
+			
 			// Set the drawing origin for the head of the snake 
 			// since the head has a radius of 5, we have to -5 the get to the upper left corner
-			head.setPosition(lvl1.snake.snakePoints[0].col - 5, lvl1.snake.snakePoints[0].row - 5);
+			lvl1.snake.head.setPosition(lvl1.snake.snakePoints[0].col - 5, lvl1.snake.snakePoints[0].row - 5);
+			*/
+
+
 
 
 			// Set the drawing location for each body part of the snake 
-			for (int i = 1; i < lvl1.snake.snakePoints.size(); i++)
-			{
-				body.setPosition(lvl1.snake.snakePoints[i].col - 5, lvl1.snake.snakePoints[i].row - 5);
-				snakebody.push_back(body);
-			}
+			//for (int i = 1; i < lvl1.snake.snakePoints.size(); i++)
+			//{
+			//	lvl1.snake.body.setPosition(lvl1.snake.snakePoints[i].col - 5, lvl1.snake.snakePoints[i].row - 5);
+			//	snakebody.push_back(lvl1.snake.body);
+			//}
 
 
 
@@ -316,12 +322,12 @@ int main()
 			}
 
 			// Draw head of the snake
-			window.draw(head);
+			window.draw(lvl1.snake.head);
 
 			// Draw the body of the snake depending on its size
-			for (int i = 0; i < snakebody.size(); i++)
+			for (int i = 0; i < lvl1.snake.snakebody.size(); i++)
 			{
-				window.draw(snakebody[i]);
+				window.draw(lvl1.snake.snakebody[i]);
 			}
 
 			// Draw the food
@@ -333,7 +339,7 @@ int main()
 
 
 			// clear the vector of after it has been drawn
-			snakebody.clear();
+			//snakebody.clear();
 
 			// check if GameOver condition is reached
 			lvl1.checkGameOver();
