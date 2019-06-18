@@ -12,12 +12,10 @@
 
 Snake::Snake()
 {
-	snakeLength = 3;
+	snakeLength = 6;
 
-	initLocation.row = 275;
-	initLocation.col = 275;
-	location.row = initLocation.row;
-	location.col = initLocation.col;
+	location.row = 275;
+	location.col = 275;
 
 	// Generate the head and body for the snake in a vertical line
 	for (int i = 0; i < snakeLength; i++)

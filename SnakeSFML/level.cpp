@@ -12,37 +12,31 @@
 using namespace std;
 
 
-// Std - Constructor
+// STD - Constructor
 Level::Level()
 {
-	points = rows * cols;
-
+	gameOver = false;
+	foodOnField = false;
 	foodCount = 0;
 	score = 0.0;
-
+	/*
 	for (int i = 0; i < rows; i++)
 	{
 		for (int j = 0; j < cols; j++)
 		{
-			levelPoints[i][j] = char(0);
+			//levelPoints[i][j] = char(0);
 		}
 	}
+	*/
 }
 
-// Allg. Constructor
-Level::Level(int nRows, int nCols)
-{
-	rows = nRows;
-	cols = nCols;
-}
 
 // Destructor
-Level::~Level()
-{}
+Level::~Level(){}
 
 
 // Methods
-
+/*
 void Level::drawBoundaries()
 {
 	for (int i = 0; i < rows; i++)
@@ -60,10 +54,13 @@ void Level::drawBoundaries()
 		}
 	}
 }
+*/
 
 
+/************************************************************/
 // Method for update all items in the game
 // Boundieres, Snake, Food etc.
+/*
 void Level::updateLevel()
 {
 	int snakeIndex = 0;
@@ -102,8 +99,9 @@ void Level::updateLevel()
 		}
 	}
 }
+*/
 
-
+/*
 // Mehtod for drawing all items in the console
 void Level::drawLevel()
 {
@@ -117,13 +115,15 @@ void Level::drawLevel()
 		cout << endl;
 	}
 }
+*/
+/************************************************************/
 
 
 
 // GameOver is When Head of Snake is in its body or boundaries
-bool Level::checkGameOver()
+void Level::checkGameOver()
 {
-	bool gameOver = false;
+	//bool gameOver = false;
 	// Starts at 1 because Head is 0
 	for (int i = 1; i < snake.snakePoints.size(); i++)
 	{
@@ -139,15 +139,6 @@ bool Level::checkGameOver()
 		{
 			gameOver = true;
 		}
-	}
-
-	if (gameOver == true)
-	{
-		return true;
-	}
-	else
-	{
-		return false;
 	}
 }
 
@@ -216,9 +207,30 @@ void Level::eatFood()
 
 
 
-void Level::calculateScore()
+void Level::calculateStats()
 {
-	score = (((foodCount + 1) * 10) - (timeElapsed*0.4)) * 100;
+	timeElapsed = clock.getElapsedTime();
+
+	score = round((((foodCount + 1) * 10) - (timeElapsed.asSeconds()*0.4)) * 100);
+
+	timeNow = time(0);
+	localtime_s(&nowLocal, &timeNow);
+
+	year = nowLocal.tm_year + 1900;
+	month = nowLocal.tm_mon + 1;
+	day = nowLocal.tm_mday;
+	hour = nowLocal.tm_hour;
+	minute = nowLocal.tm_min;
+	seconds = nowLocal.tm_sec;
+}
+
+
+void Level::showStats()
+{
+	cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!! GAME OVER !!!!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
+	cout << "Your Run lastet " << timeElapsed.asSeconds() << " seconds! and ate " << foodCount << " Food! Good Job :)" << endl;
+	cout << "Your total score is: " << score << " Keep up the good work!" << endl;
+	cout << "Played on " << day << "." << month << "." << year << " at " << hour << ":" << minute << ":" << seconds << endl;
 }
 
 

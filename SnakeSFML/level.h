@@ -9,44 +9,41 @@
 
 #include "point.h"
 #include <vector>
+#include "time.h"
 #include "snake.h"
+#include <SFML/System/Clock.hpp>
 
-
+/*
 #define EMPTYFIELD char(0);
 #define BOUNDARY '#';
 #define SNAKEHEAD 'X';
 #define SNAKEBODY '0';
 #define FOOD char(148);
+*/
 
 using namespace std;
 
 class Level
 {
-protected:
-
-
-
 public:
-
-	Level();
-	Level(int, int);
-	~Level();
-
+	/*
 	int rows = 20;
 	int cols = 20;
 	int points;
-	//vector<int> levelPoints;
 	char levelPoints[20][20];
+	*/
 	Snake snake;
 
 
 	Point foodLocation;
-	bool foodOnField = false;
+	bool foodOnField;;
 	int foodCount;
 	double score;
+	bool gameOver;
 
+	sf::Time timeElapsed;
+	sf::Clock clock;
 
-	time_t timeElapsed;
 	tm nowLocal;
 	time_t timeNow;
 	time_t gameStartTime;
@@ -58,21 +55,20 @@ public:
 	int seconds;
 
 
-	// Getter
-
-	// Setter
-
+	Level();
+	~Level();
 
 	// Methods
 
-	void drawBoundaries();
-	void updateLevel();
+	//void drawBoundaries();
+	//void updateLevel();
 
-	void drawLevel();
-	bool checkGameOver();
+	//void drawLevel();
+	void checkGameOver();
 
 	void generateFood();
 	void eatFood();
 
-	void calculateScore();
+	void calculateStats();
+	void showStats();
 };

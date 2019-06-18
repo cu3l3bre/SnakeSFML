@@ -20,25 +20,32 @@ enum SnakeDirection
 	SnakeLeft
 };
 
+// Note to SnakeDirection
+// if we do +1 on each direction, we cycle through it clockwise
+// if we do -1 on each direction, we cycle through it counterclockwise
+// but need to pay attention if we are on 0 and do -1 , that would be -1 which would equal 3
+// same is when direction is 3 and we do +1, that would be 4 , in that case it would be 0
+// so we have to check for that "overflow"
+
+//							SnakeUp = 0
+//
+//		SnakeLeft = 3							SnakeRight = 1
+//
+//							SnakeDown = 2
+
+
 
 class Snake
 {
-private:
-
-
-
-
 public:
-	Snake();
-	~Snake();
-	void updateSnake();
-
 
 	int snakeLength;
-	int direction; // 0 = up, 1 = right; 2 = down , 3 = left
+	int direction;		// 0 = up, 1 = right; 2 = down , 3 = left
 
-	Point initLocation;
 	Point location;
 	std::vector<Point> snakePoints;
 
+	Snake();
+	~Snake();
+	void updateSnake();
 };

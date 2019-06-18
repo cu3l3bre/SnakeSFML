@@ -8,6 +8,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
+#include <SFML/System/Clock.hpp>
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -110,13 +111,8 @@ int main()
 
 
 
-	
-
-	
-	
-
 	// create the main window with its dimension and its title
-	sf::RenderWindow window(sf::VideoMode(500, 515), "Snake Game using SFML!");
+	sf::RenderWindow window(sf::VideoMode(500, 550), "Snake Game using SFML!");
 
 
 	const float FPS = 8.0f; //The desired FPS. (The number of updates each second).
@@ -181,8 +177,8 @@ int main()
 	vector<sf::RectangleShape> boundaries;
 
 
-	sf::Time timeTest = sf::seconds(0.25);
-
+	lvl1.clock.restart();
+	//sf::Time timelapsed;
 
 	// set the boundaries around the field 
 	for (int i = 5; i <= 495; i += 5)
@@ -198,7 +194,6 @@ int main()
 		}
 	}
 
-	bool gameOver = false;
 
 	// will be executed as long as the window is open
 	while (window.isOpen())
@@ -213,124 +208,132 @@ int main()
 			}
 		}
 
+		
+		if (!lvl1.gameOver)
+		{
+			
 
-	
-		// Wait for keypress of the A Key
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) && !sf::Keyboard::isKeyPressed(sf::Keyboard::D))
-		{
-			lvl1.snake.direction -= 1;	// cycle trough directions counterclockwise
+			// Wait for keypress of the A Key
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) && !sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+			{
+				lvl1.snake.direction -= 1;	// cycle trough directions counterclockwise
+			}
+
+
+			// Wait for keypress of the D Key
+			else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::A) && sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+			{
+				lvl1.snake.direction += 1;	// cycle trough directions clockwise
+			}
+			else
+			{
+				// direction remains as it is
+			}
+
+
+			// Check for Overflow
+			if (lvl1.snake.direction == -1)
+			{
+				lvl1.snake.direction = 3;
+			}
+			else if (lvl1.snake.direction == 4)
+			{
+				lvl1.snake.direction = 0;
+			}
+
+			// check if food is on field
+			if (!lvl1.foodOnField)
+			{
+				lvl1.generateFood();
+				lvl1.foodOnField = true;
+			}
+
+
+
+			// check if snake has found some food and let it grow
+			if ((lvl1.foodLocation.row == lvl1.snake.snakePoints[0].row) && (lvl1.foodLocation.col == lvl1.snake.snakePoints[0].col))
+			{
+				lvl1.eatFood();
+			}
+
+
+			// update the snake values
+			lvl1.snake.updateSnake();
+
+			// write new point vlaue in 0
+			switch (lvl1.snake.direction)
+			{
+			case SnakeUp: lvl1.snake.snakePoints[0].row -= 10; break;
+			case SnakeRight: lvl1.snake.snakePoints[0].col += 10; break;
+			case SnakeDown: lvl1.snake.snakePoints[0].row += 10; break;
+			case SnakeLeft: lvl1.snake.snakePoints[0].col -= 10; break;
+			default:break;
+			}
+
+
+
+
+			// Set the drawing origin for the head of the snake 
+			// since the head has a radius of 5, we have to -5 the get to the upper left corner
+			head.setPosition(lvl1.snake.snakePoints[0].col - 5, lvl1.snake.snakePoints[0].row - 5);
+
+
+			// Set the drawing location for each body part of the snake 
+			for (int i = 1; i < lvl1.snake.snakePoints.size(); i++)
+			{
+				body.setPosition(lvl1.snake.snakePoints[i].col - 5, lvl1.snake.snakePoints[i].row - 5);
+				snakebody.push_back(body);
+			}
+
+			// Set the drawing location for the food 
+			food.setPosition(lvl1.foodLocation.col - 5, lvl1.foodLocation.row - 5);
+
+			// Draw Items inside the window
+			window.clear();
+
+			// Draw the boundaries that limit the map
+			for (int i = 0; i < boundaries.size(); i++)
+			{
+				window.draw(boundaries[i]);
+			}
+
+			// Draw head of the snake
+			window.draw(head);
+
+			// Draw the body of the snake depending on its size
+			for (int i = 0; i < snakebody.size(); i++)
+			{
+				window.draw(snakebody[i]);
+			}
+
+			// Draw the food
+			window.draw(food);
+
+
+			// displays the items in the window
+			window.display();
+
+
+			// clear the vector of after it has been drawn
+			snakebody.clear();
+
+			// check if GameOver condition is reached
+			lvl1.checkGameOver();
+
+			if (lvl1.gameOver)
+			{
+				lvl1.calculateStats();
+				lvl1.showStats();
+			}
+
 		}
-		// Wait for keypress of the D Key
-		else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::A) && sf::Keyboard::isKeyPressed(sf::Keyboard::D))
-		{
-				
-			lvl1.snake.direction += 1;	// cycle trough directions clockwise
-				
-		}
+		// GameOver
 		else
 		{
-			// direction remains as it is
-		}
-
-
-		// Check for Overflow
-		if (lvl1.snake.direction == -1)
-		{
-			lvl1.snake.direction = 3;
-		}
-		else if (lvl1.snake.direction == 4)
-		{
-			lvl1.snake.direction = 0;
-		}
-
-
-		if (!lvl1.foodOnField)
-		{
-			// limits 15 is possible
-			// 485
-			lvl1.generateFood();
-			lvl1.foodOnField = true;
-			//lvl1.foodLocation.col = 485;	// test
-			//lvl1.foodLocation.row = 15;
-
-		}
-
-
-
-		// Check if snake has found some food and let it grow
-		if ((lvl1.foodLocation.row == lvl1.snake.snakePoints[0].row) && (lvl1.foodLocation.col == lvl1.snake.snakePoints[0].col))
-		{
-			lvl1.eatFood();
-		}
-
-
-
-		lvl1.snake.updateSnake();
-
-		// write new point vlaue in 0
-		switch (lvl1.snake.direction)
-		{
-		case SnakeUp: lvl1.snake.snakePoints[0].row -= 10; break;
-		case SnakeRight: lvl1.snake.snakePoints[0].col += 10; break;
-		case SnakeDown: lvl1.snake.snakePoints[0].row += 10; break;
-		case SnakeLeft: lvl1.snake.snakePoints[0].col -= 10; break;
-		default:break;
-		}
-
-
-
-
-		// Set the drawing location for the head of the snake 
-		// since the head has a radius of 5, we have to -5 the get to the top left corner
-		head.setPosition(lvl1.snake.snakePoints[0].col - 5, lvl1.snake.snakePoints[0].row - 5);
-
-
-		// Set the drawing location for each body part of the snake 
-		for (int i = 1; i < lvl1.snake.snakePoints.size(); i++)
-		{
-			body.setPosition(lvl1.snake.snakePoints[i].col - 5, lvl1.snake.snakePoints[i].row - 5);
-			snakebody.push_back(body);
-		}
-
-		// Set the drawing location for the food 
-		food.setPosition(lvl1.foodLocation.col - 5, lvl1.foodLocation.row - 5);
-
-		// Draw Items inside the window
-		window.clear();
-
-		// Draw head of the snake
-		window.draw(head);
-			
-		// Draw the body of the snake depending on its size
-		for (int i = 0; i < snakebody.size(); i++)
-		{
-			window.draw(snakebody[i]);
-		}
-
-		// Draw the food
-		window.draw(food);
-
-		// Draw the boundaries that limit the map
-		for (int i = 0; i < boundaries.size(); i++)
-		{
-			window.draw(boundaries[i]);
-		}
-
-
-		// displays the items in the window
-		window.display();
-
-
-		// clear the vector of after it has been drawn
-		snakebody.clear();
-
-
-		gameOver = lvl1.checkGameOver();
-
-		if (gameOver)
-		{
-			//cout << "GameOver" << endl;
-			window.close();
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
+			{
+				window.close();
+			}
 		}
 
 	}
