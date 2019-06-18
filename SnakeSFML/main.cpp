@@ -29,7 +29,9 @@ int main()
 
 
 	// öffnen der Datenabnk
-
+	string Name[3];
+	string Highscore[3];
+	string Date[3];
 
 	const char* dateiname = "Snake_Highscores.sqlite";
 
@@ -80,6 +82,20 @@ int main()
 
 						cout << ergebnisse[datenposition] << "  ";
 
+						if (datenposition == 0)
+						{
+							Name[zeile] = ergebnisse[datenposition];
+						}
+						else if (datenposition == 1)
+						{
+							Highscore[zeile] = ergebnisse[datenposition];
+						}
+						else if (datenposition == 2)
+						{
+							Date[zeile] = ergebnisse[datenposition];
+						}
+							
+
 					}
 
 					// Zeilenumbruch nach jeder Zeile
@@ -89,7 +105,11 @@ int main()
 
 
 			}
-
+			/*
+			cout << Name[0] << endl;
+			cout << Name[1] << endl;
+			cout << Name[2] << endl;
+			*/
 			//speicher wieder freigeben
 			sqlite3_free_table(ergebnisse);
 
