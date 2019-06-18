@@ -40,6 +40,7 @@ public:
 	int foodCount;
 	double score;
 	bool gameOver;
+	bool gameRunning;
 
 	sf::Time timeElapsed;
 	sf::Clock clock;

@@ -15,6 +15,7 @@ using namespace std;
 // STD - Constructor
 Level::Level()
 {
+	gameRunning = false;
 	gameOver = false;
 	foodOnField = false;
 	foodCount = 0;

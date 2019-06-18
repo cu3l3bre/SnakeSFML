@@ -177,8 +177,8 @@ int main()
 	vector<sf::RectangleShape> boundaries;
 
 
-	lvl1.clock.restart();
-	//sf::Time timelapsed;
+	
+
 
 	// set the boundaries around the field 
 	for (int i = 5; i <= 495; i += 5)
@@ -208,8 +208,17 @@ int main()
 			}
 		}
 
+
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) && !lvl1.gameRunning)
+		{
+			lvl1.gameRunning = true;
+			lvl1.gameOver = false;
+			lvl1.clock.restart();
+		}
+
+
 		
-		if (!lvl1.gameOver)
+		if (!lvl1.gameOver && lvl1.gameRunning)
 		{
 			
 
@@ -328,12 +337,31 @@ int main()
 
 		}
 		// GameOver
-		else
+		else if (lvl1.gameOver && lvl1.gameRunning)
 		{
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
 			{
+				//lvl1.gameRunning = false;
+				//window.clear();
+				//window.display();
+
 				window.close();
+				// maybe gamerunning = false
+				//lvl1.gameRunning = false;
 			}
+		}
+
+		else
+		{
+			window.clear();
+
+			// Draw the boundaries that limit the map
+			for (int i = 0; i < boundaries.size(); i++)
+			{
+				window.draw(boundaries[i]);
+			}
+
+			window.display();
 		}
 
 	}

@@ -8,7 +8,7 @@
 #include "snake.h"
 
 
-// Std-Constructor
+// Constructor
 
 Snake::Snake()
 {
