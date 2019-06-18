@@ -20,6 +20,22 @@ Level::Level()
 	foodOnField = false;
 	foodCount = 0;
 	score = 0.0;
+
+
+
+	rectangleSize.x = 10;
+	rectangleSize.y = 10;
+
+	boundary.setSize(rectangleSize);
+	boundary.setFillColor(sf::Color::Red);
+
+	food.setRadius(5.f);
+	food.setFillColor(sf::Color::Yellow);
+
+
+
+
+
 	/*
 	for (int i = 0; i < rows; i++)
 	{
@@ -192,6 +208,10 @@ void Level::generateFood()
 			foodGeneratedOnSnake = false;
 		}
 	}
+
+	// Set Drwaing Origin for shape
+	food.setPosition(foodLocation.col - 5, foodLocation.row - 5);
+
 }
 
 
@@ -235,3 +255,20 @@ void Level::showStats()
 }
 
 
+void Level::createBoundaries()
+{
+	for (int i = 5; i <= 495; i += 5)
+	{
+		for (int j = 5; j <= 495; j += 5)
+		{
+			if ((i == 5) || (j == 5) || (i == 495) || (j == 495))
+			{
+
+				boundary.setPosition(i - 5, j - 5);	// set the origin of each boundary
+				boundaries.push_back(boundary);
+			}
+		}
+	}
+
+
+}

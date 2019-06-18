@@ -11,6 +11,8 @@
 #include <vector>
 #include "time.h"
 #include "snake.h"
+#include <SFML/Graphics.hpp>
+#include <SFML/System.hpp>
 #include <SFML/System/Clock.hpp>
 
 /*
@@ -42,6 +44,14 @@ public:
 	bool gameOver;
 	bool gameRunning;
 
+	sf::Vector2f rectangleSize;
+	sf::RectangleShape boundary;
+	vector<sf::RectangleShape> boundaries;
+
+
+	sf::CircleShape food;
+
+
 	sf::Time timeElapsed;
 	sf::Clock clock;
 
@@ -65,6 +75,10 @@ public:
 	//void updateLevel();
 
 	//void drawLevel();
+
+
+	void createBoundaries();
+
 	void checkGameOver();
 
 	void generateFood();

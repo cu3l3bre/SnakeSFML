@@ -135,20 +135,20 @@ int main()
 
 
 	// create the shape for the food
-	sf::CircleShape food;
-	food.setRadius(5.f);
-	food.setFillColor(sf::Color::Yellow);
+	//sf::CircleShape food;
+	//food.setRadius(5.f);
+	//food.setFillColor(sf::Color::Yellow);
 
 
 	// create dimensions for one recantangle boundary
-	sf::Vector2f rectangleSize;
-	rectangleSize.x = 10;
-	rectangleSize.y = 10;
+	//sf::Vector2f rectangleSize;
+	//rectangleSize.x = 10;
+	//rectangleSize.y = 10;
 
 	// creathe the object for the rectangle boundary
-	sf::RectangleShape boundary;
-	boundary.setSize(rectangleSize);
-	boundary.setFillColor(sf::Color::Red);
+	//sf::RectangleShape boundary;
+	//boundary.setSize(rectangleSize);
+	//boundary.setFillColor(sf::Color::Red);
 	
 
 	/*
@@ -174,13 +174,15 @@ int main()
 	vector<sf::CircleShape> snakebody;
 	
 	// create a vecotor which stores all boundaries around the field
-	vector<sf::RectangleShape> boundaries;
+	//vector<sf::RectangleShape> boundaries;
 
 
 	
 
 
 	// set the boundaries around the field 
+	lvl1.createBoundaries();
+	/* NOW IN METHOD
 	for (int i = 5; i <= 495; i += 5)
 	{
 		for (int j = 5; j <= 495; j += 5)
@@ -188,12 +190,12 @@ int main()
 			if((i == 5) || (j == 5) || (i == 495) || (j == 495))
 			{
 
-				boundary.setPosition(i-5, j-5);	// set the origin of each boundary
-				boundaries.push_back(boundary);
+				lvl1.boundary.setPosition(i-5, j-5);	// set the origin of each boundary
+				boundaries.push_back(lvl1.boundary);
 			}
 		}
 	}
-
+	*/
 
 	// will be executed as long as the window is open
 	while (window.isOpen())
@@ -294,16 +296,23 @@ int main()
 				snakebody.push_back(body);
 			}
 
+
+
 			// Set the drawing location for the food 
-			food.setPosition(lvl1.foodLocation.col - 5, lvl1.foodLocation.row - 5);
+			// SHOULD BE NOW IN METHOD 
+			//lvl1.food.setPosition(lvl1.foodLocation.col - 5, lvl1.foodLocation.row - 5);
+
+
+
+
 
 			// Draw Items inside the window
 			window.clear();
 
 			// Draw the boundaries that limit the map
-			for (int i = 0; i < boundaries.size(); i++)
+			for (int i = 0; i < lvl1.boundaries.size(); i++)
 			{
-				window.draw(boundaries[i]);
+				window.draw(lvl1.boundaries[i]);
 			}
 
 			// Draw head of the snake
@@ -316,7 +325,7 @@ int main()
 			}
 
 			// Draw the food
-			window.draw(food);
+			window.draw(lvl1.food);
 
 
 			// displays the items in the window
@@ -356,9 +365,9 @@ int main()
 			window.clear();
 
 			// Draw the boundaries that limit the map
-			for (int i = 0; i < boundaries.size(); i++)
+			for (int i = 0; i < lvl1.boundaries.size(); i++)
 			{
-				window.draw(boundaries[i]);
+				window.draw(lvl1.boundaries[i]);
 			}
 
 			window.display();
