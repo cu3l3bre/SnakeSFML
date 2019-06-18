@@ -6,20 +6,19 @@
 //////////////////////////////////////////////////////////////////////////////////////////////
 
 
-#include <SFML/Graphics.hpp>
-#include <SFML/System.hpp>
-#include <SFML/System/Clock.hpp>
 #include <iostream>
+#include <string>
 #include <fstream>
-#include <vector>
 #include "sqlite3.h"
 
-#include "snake.h"
 #include "level.h"
 
-#include "time.h"
+
+#define GAMESIZE_X 500
+#define GAMESIZE_Y 500
 
 using namespace std;
+
 
 int main()
 {
@@ -112,7 +111,7 @@ int main()
 
 
 	// create the main window with its dimension and its title
-	sf::RenderWindow window(sf::VideoMode(500, 550), "Snake Game using SFML!");
+	sf::RenderWindow window(sf::VideoMode(GAMESIZE_X, GAMESIZE_Y), "Snake Game using SFML!");
 
 
 	const float FPS = 8.0f; //The desired FPS. (The number of updates each second).
@@ -122,83 +121,87 @@ int main()
 	Level lvl1;
 
 
-	// create the shape for the snake head
-	//sf::CircleShape head;
-	//head.setRadius(5.f);
-	//head.setFillColor(sf::Color::Red);
-
-
-	// create the shape for the snake body
-	
-	//sf::CircleShape body;
-	//body.setRadius(5.f);
-	//body.setFillColor(sf::Color::Green);
-
-
-	// create the shape for the food
-	//sf::CircleShape food;
-	//food.setRadius(5.f);
-	//food.setFillColor(sf::Color::Yellow);
-
-
-	// create dimensions for one recantangle boundary
-	//sf::Vector2f rectangleSize;
-	//rectangleSize.x = 10;
-	//rectangleSize.y = 10;
-
-	// creathe the object for the rectangle boundary
-	//sf::RectangleShape boundary;
-	//boundary.setSize(rectangleSize);
-	//boundary.setFillColor(sf::Color::Red);
-	
-
-	/*
+	// try catch
 	sf::Font font;
 	if (!font.loadFromFile("arial.ttf"))
 	{
 		// error...
 	}
-	*/
-
-	/*
-	sf::Text text;
-
-	//text.setFont(font);
-	text.setString("GameOver");
-	text.setCharacterSize(24);
-	text.setFillColor(sf::Color::Red);
-	text.setStyle(sf::Text::Bold | sf::Text::Underlined);
-	*/
-
-
-	// create a vector of circleshapes which represent the snakebody
-	//vector<sf::CircleShape> snakebody;
-	
-	// create a vecotor which stores all boundaries around the field
-	//vector<sf::RectangleShape> boundaries;
-
-
 	
 
+	sf::FloatRect bounds;
 
-	// set the boundaries around the field 
-	lvl1.createBoundaries();
-	/* NOW IN METHOD
-	for (int i = 5; i <= 495; i += 5)
-	{
-		for (int j = 5; j <= 495; j += 5)
-		{
-			if((i == 5) || (j == 5) || (i == 495) || (j == 495))
-			{
+	sf::Text instrcution;
+	instrcution.setFont(font);
+	instrcution.setString("Press s to start or q to quit");
+	instrcution.setCharacterSize(24);
+	instrcution.setFillColor(sf::Color::Green);
+	instrcution.setStyle(sf::Text::Bold);
+	bounds = instrcution.getLocalBounds();
+	instrcution.setPosition((GAMESIZE_X/2) - (bounds.width / 2), 100);
 
-				lvl1.boundary.setPosition(i-5, j-5);	// set the origin of each boundary
-				boundaries.push_back(lvl1.boundary);
-			}
-		}
-	}
-	*/
 
-	// will be executed as long as the window is open
+	sf::Text instrcution2;
+	instrcution2.setFont(font);
+	instrcution2.setString("Use a for left or d for right to control the snake GLHF");
+	instrcution2.setCharacterSize(16);
+	instrcution2.setFillColor(sf::Color::Green);
+	instrcution2.setStyle(sf::Text::Bold);
+	bounds = instrcution2.getLocalBounds();
+	instrcution2.setPosition((GAMESIZE_X / 2) - (bounds.width / 2), 450);
+
+
+	sf::Text instrcution3;
+	instrcution3.setFont(font);
+	instrcution3.setString("Use b to go back to the menu or q to quit");
+	instrcution3.setCharacterSize(16);
+	instrcution3.setFillColor(sf::Color::Green);
+	instrcution3.setStyle(sf::Text::Bold);
+	bounds = instrcution3.getLocalBounds();
+	instrcution3.setPosition((GAMESIZE_X / 2) - (bounds.width / 2), 450);
+
+
+
+
+
+
+	sf::Text gameOver;
+	gameOver.setFont(font);
+	gameOver.setString("**** GameOver ****");
+	gameOver.setCharacterSize(24);
+	gameOver.setFillColor(sf::Color::Red);
+	gameOver.setStyle(sf::Text::Bold);
+	bounds = gameOver.getLocalBounds();
+	gameOver.setPosition((GAMESIZE_X/2) - (bounds.width/2), 100);
+
+
+
+
+	sf::Text playtimeFood;
+	playtimeFood.setFont(font);
+	playtimeFood.setString("**** playtimefodd ****");
+	playtimeFood.setCharacterSize(20);
+	playtimeFood.setFillColor(sf::Color::Green);
+	playtimeFood.setStyle(sf::Text::Bold);
+	
+
+	sf::Text totalScore;
+	totalScore.setFont(font);
+	totalScore.setString("**** Total Score ****");
+	totalScore.setCharacterSize(20);
+	totalScore.setFillColor(sf::Color::Green);
+	totalScore.setStyle(sf::Text::Bold);
+
+
+	sf::Text date;
+	date.setFont(font);
+	date.setString("**** Date ****");
+	date.setCharacterSize(20);
+	date.setFillColor(sf::Color::Green);
+	date.setStyle(sf::Text::Bold);
+
+
+	// Will be executed as long as the window is open
 	while (window.isOpen())
 	{
 	
@@ -216,42 +219,18 @@ int main()
 		{
 			lvl1.gameRunning = true;
 			lvl1.gameOver = false;
+			lvl1.createBoundaries();
 			lvl1.clock.restart();
 		}
 
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
+		{
+			window.close();
+		}
 
-		
+		// Game Main Loop
 		if (!lvl1.gameOver && lvl1.gameRunning)
 		{
-			
-
-			// Wait for keypress of the A Key
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) && !sf::Keyboard::isKeyPressed(sf::Keyboard::D))
-			{
-				lvl1.snake.direction -= 1;	// cycle trough directions counterclockwise
-			}
-
-
-			// Wait for keypress of the D Key
-			else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::A) && sf::Keyboard::isKeyPressed(sf::Keyboard::D))
-			{
-				lvl1.snake.direction += 1;	// cycle trough directions clockwise
-			}
-			else
-			{
-				// direction remains as it is
-			}
-
-
-			// Check for Overflow
-			if (lvl1.snake.direction == -1)
-			{
-				lvl1.snake.direction = 3;
-			}
-			else if (lvl1.snake.direction == 4)
-			{
-				lvl1.snake.direction = 0;
-			}
 
 			// check if food is on field
 			if (!lvl1.foodOnField)
@@ -261,58 +240,41 @@ int main()
 			}
 
 
-
-			// check if snake has found some food and let it grow
-			if ((lvl1.foodLocation.row == lvl1.snake.snakePoints[0].row) && (lvl1.foodLocation.col == lvl1.snake.snakePoints[0].col))
+			// Wait for keypress of the A Key
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) && !sf::Keyboard::isKeyPressed(sf::Keyboard::D))
 			{
-				lvl1.eatFood();
+				lvl1.snake.direction -= 1;	// Cycle trough directions counterclockwise
 			}
 
 
-			// update the snake values
+			// Wait for keypress of the D Key
+			else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::A) && sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+			{
+				lvl1.snake.direction += 1;	// Cycle trough directions clockwise
+			}
+			else
+			{
+				// Direction remains as it is
+			}
+
+
+			// Check for Direction Overflow
+			lvl1.snake.checkDirectionOverflow();
+
+
+			// Check if snake has found some food and let it grow
+			lvl1.checkSnakeAteFood();
+
+
+			// Update the snake values
 			lvl1.snake.updateSnake();
 
-			// set direction based on user input
+			// Set direction based on user input
 			lvl1.snake.setSnakeDirection();
 
-			/*
-			// write new point vlaue in 0
-			switch (lvl1.snake.direction)
-			{
-			case SnakeUp: lvl1.snake.snakePoints[0].row -= 10; break;
-			case SnakeRight: lvl1.snake.snakePoints[0].col += 10; break;
-			case SnakeDown: lvl1.snake.snakePoints[0].row += 10; break;
-			case SnakeLeft: lvl1.snake.snakePoints[0].col -= 10; break;
-			default:break;
-			}
-
-			
-			// Set the drawing origin for the head of the snake 
-			// since the head has a radius of 5, we have to -5 the get to the upper left corner
-			lvl1.snake.head.setPosition(lvl1.snake.snakePoints[0].col - 5, lvl1.snake.snakePoints[0].row - 5);
-			*/
 
 
-
-
-			// Set the drawing location for each body part of the snake 
-			//for (int i = 1; i < lvl1.snake.snakePoints.size(); i++)
-			//{
-			//	lvl1.snake.body.setPosition(lvl1.snake.snakePoints[i].col - 5, lvl1.snake.snakePoints[i].row - 5);
-			//	snakebody.push_back(lvl1.snake.body);
-			//}
-
-
-
-			// Set the drawing location for the food 
-			// SHOULD BE NOW IN METHOD 
-			//lvl1.food.setPosition(lvl1.foodLocation.col - 5, lvl1.foodLocation.row - 5);
-
-
-
-
-
-			// Draw Items inside the window
+			// Clear the window
 			window.clear();
 
 			// Draw the boundaries that limit the map
@@ -321,8 +283,10 @@ int main()
 				window.draw(lvl1.boundaries[i]);
 			}
 
+
 			// Draw head of the snake
 			window.draw(lvl1.snake.head);
+
 
 			// Draw the body of the snake depending on its size
 			for (int i = 0; i < lvl1.snake.snakebody.size(); i++)
@@ -330,37 +294,80 @@ int main()
 				window.draw(lvl1.snake.snakebody[i]);
 			}
 
+
 			// Draw the food
 			window.draw(lvl1.food);
 
-
-			// displays the items in the window
-			window.display();
+			
 
 
-			// clear the vector of after it has been drawn
-			//snakebody.clear();
 
-			// check if GameOver condition is reached
+
+			// check if GameOver condition is satisfied
 			lvl1.checkGameOver();
 
 			if (lvl1.gameOver)
 			{
 				lvl1.calculateStats();
-				lvl1.showStats();
+				//lvl1.showStats();
+
+				string scoreString = to_string(lvl1.score);
+				string foodString = to_string(lvl1.foodCount);
+				string timeElapsedString = to_string(lvl1.timeElapsed.asSeconds());
+				string yearString = to_string(lvl1.year);
+				string monthString = to_string(lvl1.month);
+				string dayString = to_string(lvl1.day);
+				string hourString = to_string(lvl1.hour);
+				string minuteString = to_string(lvl1.minute);
+
+				playtimeFood.setString("You lasted " + timeElapsedString + " seconds" + " and ate " + foodString + " food");
+
+				bounds = playtimeFood.getLocalBounds();
+				playtimeFood.setPosition((GAMESIZE_X / 2) - (bounds.width / 2), 150);
+
+
+				totalScore.setString("Your Score: " + scoreString + " Points");
+
+				bounds = totalScore.getLocalBounds();
+				totalScore.setPosition((GAMESIZE_X / 2) - (bounds.width / 2), 200);
+
+
+				date.setString("Played on " + dayString + "." + monthString + "." + yearString + " at " + hourString + ":" + minuteString);
+				bounds = date.getLocalBounds();
+				date.setPosition((GAMESIZE_X / 2) - (bounds.width / 2), 250);
+
+
+				window.clear();
+
+				// Draw the boundaries that limit the map
+				for (int i = 0; i < lvl1.boundaries.size(); i++)
+				{
+					window.draw(lvl1.boundaries[i]);
+				}
+
+
+				window.draw(gameOver);
+				window.draw(playtimeFood);
+				window.draw(totalScore);
+				window.draw(date);
+				window.draw(instrcution3);
 			}
+
+			// displays the items in the window
+			window.display();
 
 		}
 		// GameOver
 		else if (lvl1.gameOver && lvl1.gameRunning)
 		{
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::B))
 			{
-				//lvl1.gameRunning = false;
+				lvl1.gameRunning = false;
+				lvl1 = Level();
 				//window.clear();
 				//window.display();
 
-				window.close();
+				//window.close();
 				// maybe gamerunning = false
 				//lvl1.gameRunning = false;
 			}
@@ -368,6 +375,8 @@ int main()
 
 		else
 		{
+			lvl1.createBoundaries();
+
 			window.clear();
 
 			// Draw the boundaries that limit the map
@@ -375,6 +384,11 @@ int main()
 			{
 				window.draw(lvl1.boundaries[i]);
 			}
+
+
+			window.draw(instrcution);
+			window.draw(instrcution2);
+
 
 			window.display();
 		}

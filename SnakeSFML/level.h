@@ -23,7 +23,7 @@
 #define FOOD char(148);
 */
 
-using namespace std;
+
 
 class Level
 {
@@ -40,16 +40,21 @@ public:
 	Point foodLocation;
 	bool foodOnField;;
 	int foodCount;
-	double score;
+	int score;
 	bool gameOver;
 	bool gameRunning;
 
 	sf::Vector2f rectangleSize;
 	sf::RectangleShape boundary;
-	vector<sf::RectangleShape> boundaries;
+	std::vector<sf::RectangleShape> boundaries;
 
 
 	sf::CircleShape food;
+
+	int circleRadius;
+	int stepSize;
+	int offsetOrigin;
+
 
 
 	sf::Time timeElapsed;
@@ -83,6 +88,7 @@ public:
 
 	void generateFood();
 	void eatFood();
+	void checkSnakeAteFood();
 
 	void calculateStats();
 	void showStats();

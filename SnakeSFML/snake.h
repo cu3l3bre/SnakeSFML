@@ -12,6 +12,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 
+#define SHAPESIZE 10
 
 // Enum for Movement directions for the snake
 enum SnakeDirection
@@ -47,6 +48,9 @@ public:
 	Point location;
 	std::vector<Point> snakePoints;
 
+	int circleRadius;
+	int stepSize;
+	int offsetOrigin;
 
 	sf::CircleShape head;
 	sf::CircleShape body;
@@ -59,4 +63,5 @@ public:
 	~Snake();
 	void updateSnake();
 	void setSnakeDirection();
+	void checkDirectionOverflow();
 };

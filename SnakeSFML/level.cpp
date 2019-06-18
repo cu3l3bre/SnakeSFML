@@ -15,21 +15,24 @@ using namespace std;
 // STD - Constructor
 Level::Level()
 {
+	circleRadius = SHAPESIZE / 2;
+	stepSize = SHAPESIZE;
+	offsetOrigin = SHAPESIZE / 2;
+
+
 	gameRunning = false;
 	gameOver = false;
 	foodOnField = false;
 	foodCount = 0;
 	score = 0.0;
 
-
-
-	rectangleSize.x = 10;
-	rectangleSize.y = 10;
+	rectangleSize.x = SHAPESIZE;
+	rectangleSize.y = SHAPESIZE;
 
 	boundary.setSize(rectangleSize);
 	boundary.setFillColor(sf::Color::Red);
 
-	food.setRadius(5.f);
+	food.setRadius(circleRadius);
 	food.setFillColor(sf::Color::Yellow);
 
 
@@ -210,7 +213,7 @@ void Level::generateFood()
 	}
 
 	// Set Drwaing Origin for shape
-	food.setPosition(foodLocation.col - 5, foodLocation.row - 5);
+	food.setPosition(foodLocation.col - offsetOrigin, foodLocation.row - offsetOrigin);
 
 }
 
@@ -227,7 +230,7 @@ void Level::eatFood()
 }
 
 
-
+// Calculate the stats of the game played
 void Level::calculateStats()
 {
 	timeElapsed = clock.getElapsedTime();
@@ -245,7 +248,7 @@ void Level::calculateStats()
 	seconds = nowLocal.tm_sec;
 }
 
-
+// Show the results in the console
 void Level::showStats()
 {
 	cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!! GAME OVER !!!!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
@@ -255,6 +258,7 @@ void Level::showStats()
 }
 
 
+// Create Boundaries that limit the map
 void Level::createBoundaries()
 {
 	for (int i = 5; i <= 495; i += 5)
@@ -264,11 +268,21 @@ void Level::createBoundaries()
 			if ((i == 5) || (j == 5) || (i == 495) || (j == 495))
 			{
 
-				boundary.setPosition(i - 5, j - 5);	// set the origin of each boundary
+				boundary.setPosition(i - offsetOrigin, j - offsetOrigin);	// set the origin of each boundary
 				boundaries.push_back(boundary);
 			}
 		}
 	}
 
+
+}
+
+// Check if the snake ate something and let it grow if so
+void Level::checkSnakeAteFood()
+{
+	if ((foodLocation.row == snake.snakePoints[0].row) && (foodLocation.col == snake.snakePoints[0].col))
+	{
+		eatFood();
+	}
 
 }

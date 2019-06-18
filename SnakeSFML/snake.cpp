@@ -8,20 +8,25 @@
 #include "snake.h"
 
 
+
 // Constructor
 
 Snake::Snake()
 {
-	snakeLength = 6;
+	circleRadius = SHAPESIZE / 2;
+	stepSize = SHAPESIZE;
+	offsetOrigin = SHAPESIZE / 2;
+
+	snakeLength = 2;
 
 	location.row = 275;
 	location.col = 275;
 
 
-	head.setRadius(5.f);
+	head.setRadius(circleRadius);
 	head.setFillColor(sf::Color::Red);
 
-	body.setRadius(5.f);
+	body.setRadius(circleRadius);
 	body.setFillColor(sf::Color::Green);
 
 
@@ -29,7 +34,7 @@ Snake::Snake()
 	for (int i = 0; i < snakeLength; i++)
 	{
 		snakePoints.push_back(location);
-		location.row += 10;
+		location.row += stepSize;
 	}
 
 	// StartDirection in which the snake will move at the beginning
@@ -55,7 +60,7 @@ void Snake::updateSnake()
 		snakePoints[i] = snakePoints[i - 1];
 
 		// Sets the drawing origin where the seperat body parts are located
-		body.setPosition(snakePoints[i].col - 5, snakePoints[i].row - 5);
+		body.setPosition(snakePoints[i].col - offsetOrigin, snakePoints[i].row - offsetOrigin);
 		snakebody.push_back(body);
 	}
 }
@@ -69,16 +74,30 @@ void Snake::setSnakeDirection()
 	// write new point vlaue in 0
 	switch (direction)
 	{
-	case SnakeUp:		snakePoints[0].row -= 10; break;
-	case SnakeRight:	snakePoints[0].col += 10; break;
-	case SnakeDown:		snakePoints[0].row += 10; break;
-	case SnakeLeft:		snakePoints[0].col -= 10; break;
+	case SnakeUp:		snakePoints[0].row -= stepSize; break;
+	case SnakeRight:	snakePoints[0].col += stepSize; break;
+	case SnakeDown:		snakePoints[0].row += stepSize; break;
+	case SnakeLeft:		snakePoints[0].col -= stepSize; break;
 	default:break;
 	}
 
 
 	// Set the drawing origin for the head of the snake 
 	// since the head has a radius of 5, we have to -5 the get to the upper left corner
-	head.setPosition(snakePoints[0].col - 5, snakePoints[0].row - 5);
+	head.setPosition(snakePoints[0].col - offsetOrigin, snakePoints[0].row - offsetOrigin);
 
+}
+
+
+// Check for Overflow
+void Snake::checkDirectionOverflow()
+{
+	if (direction == -1)
+	{
+		direction = 3;
+	}
+	else if (direction == 4)
+	{
+		direction = 0;
+	}
 }
