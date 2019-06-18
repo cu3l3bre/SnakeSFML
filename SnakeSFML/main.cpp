@@ -110,79 +110,51 @@ int main()
 
 
 
-	const float FPS = 8.0f; //The desired FPS. (The number of updates each second).
+	
 
 	
 	
 
-
+	// create the main window with its dimension and its title
 	sf::RenderWindow window(sf::VideoMode(500, 515), "Snake Game using SFML!");
+
+
+	const float FPS = 8.0f; //The desired FPS. (The number of updates each second).
 	window.setFramerateLimit(FPS);
 
-	//Snake lvl1.snake;
+	// create a lvl object
 	Level lvl1;
 
 
+	// create the shape for the snake head
 	sf::CircleShape head;
 	head.setRadius(5.f);
 	head.setFillColor(sf::Color::Red);
-	head.setPosition(lvl1.snake.location.row, lvl1.snake.location.row);
 
-	
+
+	// create the shape for the snake body
 	sf::CircleShape body;
 	body.setRadius(5.f);
-	body.setFillColor(sf::Color::Red);
-	body.setPosition(100, 100);
+	body.setFillColor(sf::Color::Green);
 
 
+	// create the shape for the food
 	sf::CircleShape food;
 	food.setRadius(5.f);
 	food.setFillColor(sf::Color::Yellow);
-	//food.setPosition(100, 100);
 
 
-
-
+	// create dimensions for one recantangle boundary
 	sf::Vector2f rectangleSize;
 	rectangleSize.x = 10;
 	rectangleSize.y = 10;
 
+	// creathe the object for the rectangle boundary
 	sf::RectangleShape boundary;
 	boundary.setSize(rectangleSize);
 	boundary.setFillColor(sf::Color::Red);
-	boundary.setPosition(100, 100);
 	
 
-
-	sf::CircleShape newBodyPart();
-	//sf::CircleShape newBodyPart(20.f);
-
-
-	/*
-	sf::CircleShape snake[10];
-	snake[0].setRadius(20.f);
-	
-
-	sf::RectangleShape boundary;
-	sf::RectangleShape boundary2;
-	
-	sf::Vector2f test;
-	test.x = 10;
-	test.y = 10;
-	
-	int offset = 5;
-
-	int pointx = 5;
-	int pointy = 5;
-
-	boundary.setSize(test);
-	boundary.setPosition(pointx-offset,pointy-offset);
-	boundary.setFillColor(sf::Color::Red);
-
-	boundary2.setSize(test);
-	boundary2.setPosition(pointx+10 - offset, pointy - offset);
-	boundary2.setFillColor(sf::Color::Green);
-	*/
 	/*
 	sf::Font font;
 	if (!font.loadFromFile("arial.ttf"))
@@ -201,51 +173,37 @@ int main()
 	text.setStyle(sf::Text::Bold | sf::Text::Underlined);
 	*/
 
+
+	// create a vector of circleshapes which represent the snakebody
 	vector<sf::CircleShape> snakebody;
+	
+	// create a vecotor which stores all boundaries around the field
 	vector<sf::RectangleShape> boundaries;
 
-	/*
-	
-	sf::CircleShape newBodyPart(20.f);
-	newBodyPart.setFillColor(sf::Color::Green);
-	*/
-
-	int testflag = 0;
-	 
-	int x = 20;
-	int y = 20;
 
 	sf::Time timeTest = sf::seconds(0.25);
 
-	bool DirectionHasBeenSet = false;
 
-
-
+	// set the boundaries around the field 
 	for (int i = 5; i <= 495; i += 5)
 	{
 		for (int j = 5; j <= 495; j += 5)
 		{
 			if((i == 5) || (j == 5) || (i == 495) || (j == 495))
 			{
-				boundary.setPosition(i-5, j-5);
+
+				boundary.setPosition(i-5, j-5);	// set the origin of each boundary
 				boundaries.push_back(boundary);
 			}
 		}
 	}
 
 	bool gameOver = false;
-	//lvl1.foodOnField = false;
 
+	// will be executed as long as the window is open
 	while (window.isOpen())
 	{
 	
-
-
-		//sf::sleep(timeTest);
-		//cout << "Loop" << endl;
-		DirectionHasBeenSet = false;
-
-
 		sf::Event event;
 		while (window.pollEvent(event))
 		{
@@ -255,23 +213,19 @@ int main()
 			}
 		}
 
-		// will be executed as long as the button is pressed
+
+	
+		// Wait for keypress of the A Key
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) && !sf::Keyboard::isKeyPressed(sf::Keyboard::D))
 		{
-			if (!DirectionHasBeenSet)
-			{
-				lvl1.snake.direction -= 1;
-				DirectionHasBeenSet = true;
-			}
+			lvl1.snake.direction -= 1;	// cycle trough directions counterclockwise
 		}
-
+		// Wait for keypress of the D Key
 		else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::A) && sf::Keyboard::isKeyPressed(sf::Keyboard::D))
 		{
-			if (!DirectionHasBeenSet)
-			{
-				lvl1.snake.direction += 1;
-				DirectionHasBeenSet = true;
-			}
+				
+			lvl1.snake.direction += 1;	// cycle trough directions clockwise
+				
 		}
 		else
 		{
@@ -288,7 +242,7 @@ int main()
 		{
 			lvl1.snake.direction = 0;
 		}
-		
+
 
 		if (!lvl1.foodOnField)
 		{
@@ -298,8 +252,7 @@ int main()
 			lvl1.foodOnField = true;
 			//lvl1.foodLocation.col = 485;	// test
 			//lvl1.foodLocation.row = 15;
-			cout << lvl1.foodLocation.col << endl;	// test
-			cout << lvl1.foodLocation.row << endl;	// test
+
 		}
 
 
@@ -308,7 +261,6 @@ int main()
 		if ((lvl1.foodLocation.row == lvl1.snake.snakePoints[0].row) && (lvl1.foodLocation.col == lvl1.snake.snakePoints[0].col))
 		{
 			lvl1.eatFood();
-			cout << "yum" << endl;
 		}
 
 
@@ -319,64 +271,65 @@ int main()
 		switch (lvl1.snake.direction)
 		{
 		case SnakeUp: lvl1.snake.snakePoints[0].row -= 10; break;
-		case SnakeRight: lvl1.snake.snakePoints[0].col +=10; break;
+		case SnakeRight: lvl1.snake.snakePoints[0].col += 10; break;
 		case SnakeDown: lvl1.snake.snakePoints[0].row += 10; break;
-		case SnakeLeft: lvl1.snake.snakePoints[0].col -=10; break;
+		case SnakeLeft: lvl1.snake.snakePoints[0].col -= 10; break;
 		default:break;
 		}
 
 
 
 
-
+		// Set the drawing location for the head of the snake 
+		// since the head has a radius of 5, we have to -5 the get to the top left corner
 		head.setPosition(lvl1.snake.snakePoints[0].col - 5, lvl1.snake.snakePoints[0].row - 5);
 
 
+		// Set the drawing location for each body part of the snake 
 		for (int i = 1; i < lvl1.snake.snakePoints.size(); i++)
 		{
-			body.setRadius(5.f);
-			body.setFillColor(sf::Color::Green);
-			body.setPosition(lvl1.snake.snakePoints[i].col-5, lvl1.snake.snakePoints[i].row-5);
+			body.setPosition(lvl1.snake.snakePoints[i].col - 5, lvl1.snake.snakePoints[i].row - 5);
 			snakebody.push_back(body);
 		}
 
-
+		// Set the drawing location for the food 
 		food.setPosition(lvl1.foodLocation.col - 5, lvl1.foodLocation.row - 5);
 
 		// Draw Items inside the window
 		window.clear();
 
-
+		// Draw head of the snake
 		window.draw(head);
-		
-		/*window.draw(body);
-		window.draw(text);
-		window.draw(boundary);
-		window.draw(boundary2);
-		*/
-
+			
+		// Draw the body of the snake depending on its size
 		for (int i = 0; i < snakebody.size(); i++)
 		{
 			window.draw(snakebody[i]);
 		}
 
+		// Draw the food
 		window.draw(food);
 
+		// Draw the boundaries that limit the map
 		for (int i = 0; i < boundaries.size(); i++)
 		{
 			window.draw(boundaries[i]);
 		}
-		
+
+
+		// displays the items in the window
 		window.display();
 
+
+		// clear the vector of after it has been drawn
 		snakebody.clear();
+
 
 		gameOver = lvl1.checkGameOver();
 
 		if (gameOver)
 		{
-			cout << "GameOver" << endl;
-			//system("pause");
+			//cout << "GameOver" << endl;
 			window.close();
 		}
 

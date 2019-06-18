@@ -12,10 +12,10 @@
 
 Snake::Snake()
 {
-	snakeLength = 2;
+	snakeLength = 3;
 
-	initLocation.row = 105;
-	initLocation.col = 105;
+	initLocation.row = 275;
+	initLocation.col = 275;
 	location.row = initLocation.row;
 	location.col = initLocation.col;
 
@@ -32,9 +32,7 @@ Snake::Snake()
 
 
 // Destructor
-Snake::~Snake()
-{
-}
+Snake::~Snake(){}
 
 
 // Copy point values of the snake from top to bottom
@@ -46,7 +44,3 @@ void Snake::updateSnake()
 		snakePoints[i] = snakePoints[i - 1];
 	}
 }
-
-
-
-
