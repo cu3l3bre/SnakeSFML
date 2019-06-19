@@ -113,17 +113,40 @@ int main()
 
 	string pathToHighscoreFile = "Highscores.txt";
 
-	/*
+	
 	
 	ofstream ausgabeStrom;
-	ausgabeStrom.open(pathToHighscoreFile);
-	ausgabeStrom << "Hallo das ist ein bla " << endl;
-	ausgabeStrom << "hoi hoi hoi " << endl;
-	ausgabeStrom << "beep beep beep " << endl;
-	ausgabeStrom.close();
+	ifstream eingabeStrom;
+
+
+
+	eingabeStrom.open(pathToHighscoreFile);
+
+	// Variablen zur Aufnahem des Dateinhalts anlegen
+	int testscore = 0;
+	int newHighscore = 0;
+	string date = "";
+
+	/*
+	// Prüfung, ob wir mit der Datei arbeiten können
+	// 1. ist die Datei vorhanden
+	// 2. kann die Datei geöffnet werden
+	// 3. ist das Dateiende noch nicht
+	if (eingabeStrom.good()) {
+
+		eingabeStrom >> testscore;
+	}
+
+	cout << "Wort1: " << testscore << endl;
+	cout << "Date " << date << endl;
+
+	eingabeStrom.close();
+
 	*/
 
+	
 
+	
 	// Variable vorbereiten, die den ganzen Inhalt der Datei aufnehemen kann
 	vector<string> dateiInhalt;
 
@@ -153,6 +176,7 @@ int main()
 		cout << "Zeile " << i+1 << ": " << dateiInhalt[i] << endl;
 	}
 
+	/*
 	vector<string> name;
 	vector<string> score;
 	vector<string> date;
@@ -198,8 +222,17 @@ int main()
 		cout << score[i] << "\t" << name[i] << "\t" << date[i] << endl;
 	}
 
-	int testscore = std::stoi(score[0]);
-	cout << "Test : " << testscore << endl;
+
+	*/
+
+	testscore = std::stoi(dateiInhalt[0]);
+	cout << "Test : " << std::stoi(dateiInhalt[0]) << endl;
+
+
+
+
+
+
 
 
 	try
@@ -334,9 +367,13 @@ int main()
 
 				if (lvl1.score > testscore)
 				{
-					int newHighscore = lvl1.score;
+					newHighscore = lvl1.score;
 				}
 
+				ausgabeStrom.open(pathToHighscoreFile);
+				ausgabeStrom << to_string(newHighscore) << endl;
+				ausgabeStrom << lvl1.dayString + "." + lvl1.monthString + "." + lvl1.yearString + " at " + lvl1.hourString + ":" + lvl1.minuteString;
+				ausgabeStrom.close();
 
 
 				window.clear();
