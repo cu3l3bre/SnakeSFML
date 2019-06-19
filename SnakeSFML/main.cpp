@@ -111,6 +111,97 @@ int main()
 	srand(time(0));
 
 
+	string pathToHighscoreFile = "Highscores.txt";
+
+	/*
+	
+	ofstream ausgabeStrom;
+	ausgabeStrom.open(pathToHighscoreFile);
+	ausgabeStrom << "Hallo das ist ein bla " << endl;
+	ausgabeStrom << "hoi hoi hoi " << endl;
+	ausgabeStrom << "beep beep beep " << endl;
+	ausgabeStrom.close();
+	*/
+
+
+	// Variable vorbereiten, die den ganzen Inhalt der Datei aufnehemen kann
+	vector<string> dateiInhalt;
+
+	// gleich ein Objekt mit Übergabe des Dateinamens anlegen
+	ifstream eingabeStrom2("Highscores.txt");
+
+	string eineZeile;
+	string delimiter = ",";
+	string token;
+	size_t pos = 0;
+	
+
+	while (eingabeStrom2.good()) {
+
+		// Hilfsvaraible vorbereiten
+		string eineZeile;
+
+		// lesen einer Zeile
+		getline(eingabeStrom2, eineZeile);
+
+		// diese Zeile ans Ende der Liste anfügen
+		dateiInhalt.push_back(eineZeile);
+	}
+
+	for (int i = 0; i < dateiInhalt.size(); i++)
+	{
+		cout << "Zeile " << i+1 << ": " << dateiInhalt[i] << endl;
+	}
+
+	vector<string> name;
+	vector<string> score;
+	vector<string> date;
+
+
+
+	int test = 0;
+	
+	
+	for (int i = 0; i < dateiInhalt.size(); i++)
+	{
+
+		while ((pos = dateiInhalt[i].find(delimiter)) != std::string::npos) {
+			token = dateiInhalt[i].substr(0, pos);
+			if (test == 0)
+			{
+				score.push_back(token);
+			}
+			else if (test == 1)
+			{
+				name.push_back(token);
+			}
+			else
+			{
+				date.push_back(token);
+			}
+
+
+			//std::cout << token << std::endl;
+			dateiInhalt[i].erase(0, pos + delimiter.length());
+			test++;
+		}
+
+		dateiInhalt[i] += "Leer";
+		std::cout << dateiInhalt[i] << std::endl;
+		test = 0;
+	}
+
+	cout << "Score\t" << "Name\t" << "Date" << endl;
+	for (int i = 0; i < score.size(); i++)
+	{
+		
+		cout << score[i] << "\t" << name[i] << "\t" << date[i] << endl;
+	}
+
+	int testscore = std::stoi(score[0]);
+	cout << "Test : " << testscore << endl;
+
+
 	try
 	{
 		global_font.loadFromFile("arial.ttf");
@@ -237,6 +328,17 @@ int main()
 			{
 				lvl1.calculateStats();
 				lvl1.prepareStats();
+
+
+				int newHighscore = testscore;
+
+				if (lvl1.score > testscore)
+				{
+					int newHighscore = lvl1.score;
+				}
+
+
+
 				window.clear();
 
 				// Draw the boundaries that limit the map
