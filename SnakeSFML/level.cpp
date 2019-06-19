@@ -13,7 +13,7 @@ using namespace std;
 
 
 // STD - Constructor
-Level::Level()
+Level::Level(sf::Font* newFont)
 {
 	circleRadius = SHAPESIZE / 2;
 	stepSize = SHAPESIZE;
@@ -35,19 +35,75 @@ Level::Level()
 	food.setRadius(circleRadius);
 	food.setFillColor(sf::Color::Yellow);
 
-
-
-
-
 	/*
-	for (int i = 0; i < rows; i++)
-	{
-		for (int j = 0; j < cols; j++)
+		try
 		{
-			//levelPoints[i][j] = char(0);
+			font.loadFromFile("arial.ttf");
 		}
-	}
+		catch (exception& ex)
+		{
+
+		}
 	*/
+
+	txt_instrcution.setFont(*newFont);
+	txt_instrcution.setString("Press s to start or q to quit");
+	txt_instrcution.setCharacterSize(24);
+	txt_instrcution.setFillColor(sf::Color::Green);
+	txt_instrcution.setStyle(sf::Text::Bold);
+	bounds = txt_instrcution.getLocalBounds();
+	txt_instrcution.setPosition((500 / 2) - (bounds.width / 2), 100);
+
+	
+	txt_instrcution2.setFont(*newFont);
+	txt_instrcution2.setString("Use a for left or d for right to control the snake GLHF");
+	txt_instrcution2.setCharacterSize(16);
+	txt_instrcution2.setFillColor(sf::Color::Green);
+	txt_instrcution2.setStyle(sf::Text::Bold);
+	bounds = txt_instrcution2.getLocalBounds();
+	txt_instrcution2.setPosition((500 / 2) - (bounds.width / 2), 450);
+
+
+	
+	txt_instrcution3.setFont(*newFont);
+	txt_instrcution3.setString("Use b to go back to the menu or q to quit");
+	txt_instrcution3.setCharacterSize(16);
+	txt_instrcution3.setFillColor(sf::Color::Green);
+	txt_instrcution3.setStyle(sf::Text::Bold);
+	bounds = txt_instrcution3.getLocalBounds();
+	txt_instrcution3.setPosition((500 / 2) - (bounds.width / 2), 450);
+
+
+	txt_gameOver.setFont(*newFont);
+	txt_gameOver.setString("**** GameOver ****");
+	txt_gameOver.setCharacterSize(24);
+	txt_gameOver.setFillColor(sf::Color::Red);
+	txt_gameOver.setStyle(sf::Text::Bold);
+	bounds = txt_gameOver.getLocalBounds();
+	txt_gameOver.setPosition((500 / 2) - (bounds.width / 2), 100);
+
+
+	txt_playtimeFood.setFont(*newFont);
+	txt_playtimeFood.setString("**** Dummy playtimefood ****");
+	txt_playtimeFood.setCharacterSize(20);
+	txt_playtimeFood.setFillColor(sf::Color::Green);
+	txt_playtimeFood.setStyle(sf::Text::Bold);
+
+	
+	txt_totalScore.setFont(*newFont);
+	txt_totalScore.setString("**** Dummy Total Score ****");
+	txt_totalScore.setCharacterSize(20);
+	txt_totalScore.setFillColor(sf::Color::Green);
+	txt_totalScore.setStyle(sf::Text::Bold);
+
+	
+	txt_date.setFont(*newFont);
+	txt_date.setString("**** Dummy Date ****");
+	txt_date.setCharacterSize(20);
+	txt_date.setFillColor(sf::Color::Green);
+	txt_date.setStyle(sf::Text::Bold);
+
+	
 }
 
 
@@ -56,88 +112,6 @@ Level::~Level(){}
 
 
 // Methods
-/*
-void Level::drawBoundaries()
-{
-	for (int i = 0; i < rows; i++)
-	{
-		for (int j = 0; j < cols; j++)
-		{
-			if ((i == 0) || (j == 0) || (i == (rows - 1)) || (j == (cols - 1)))
-			{
-				levelPoints[i][j] = BOUNDARY;
-			}
-			else
-			{
-				levelPoints[i][j] = EMPTYFIELD;
-			}
-		}
-	}
-}
-*/
-
-
-/************************************************************/
-// Method for update all items in the game
-// Boundieres, Snake, Food etc.
-/*
-void Level::updateLevel()
-{
-	int snakeIndex = 0;
-
-
-	for (int i = 0; i < rows; i++)
-	{
-		for (int j = 0; j < cols; j++)
-		{
-			if ((i == 0) || (j == 0) || (i == (rows - 1)) || (j == (cols - 1)))
-			{
-				levelPoints[i][j] = BOUNDARY;
-			}
-			else if ((i == foodLocation.row) && (j == foodLocation.col))
-			{
-				levelPoints[i][j] = FOOD;
-			}
-			else {
-				levelPoints[i][j] = EMPTYFIELD;
-			}
-
-			for (snakeIndex = 0; snakeIndex < snake.snakePoints.size(); snakeIndex++)
-			{
-				if ((i == snake.snakePoints[snakeIndex].row) && (j == snake.snakePoints[snakeIndex].col) &&
-					(snakeIndex == 0))
-				{
-					levelPoints[i][j] = SNAKEHEAD;
-				}
-
-				else if ((i == snake.snakePoints[snakeIndex].row) && (j == snake.snakePoints[snakeIndex].col) &&
-					(snakeIndex > 0))
-				{
-					levelPoints[i][j] = SNAKEBODY;
-				}
-			}
-		}
-	}
-}
-*/
-
-/*
-// Mehtod for drawing all items in the console
-void Level::drawLevel()
-{
-	system("cls");
-	for (int i = 0; i < rows; i++)
-	{
-		for (int j = 0; j < cols; j++)
-		{
-			cout << levelPoints[i][j];
-		}
-		cout << endl;
-	}
-}
-*/
-/************************************************************/
-
 
 
 // GameOver is When Head of Snake is in its body or boundaries
@@ -284,5 +258,36 @@ void Level::checkSnakeAteFood()
 	{
 		eatFood();
 	}
+
+}
+
+
+// 
+void Level::prepareStats()
+{
+	scoreString = to_string(score);
+	foodString = to_string(foodCount);
+	timeElapsedString = to_string(timeElapsed.asSeconds());
+	yearString = to_string(year);
+	monthString = to_string(month);
+	dayString = to_string(day);
+	hourString = to_string(hour);
+	minuteString = to_string(minute);
+
+	txt_playtimeFood.setString("You lasted " + timeElapsedString + " seconds" + " and ate " + foodString + " food");
+
+	bounds = txt_playtimeFood.getLocalBounds();
+	txt_playtimeFood.setPosition((500 / 2) - (bounds.width / 2), 150);
+
+
+	txt_totalScore.setString("Your Score: " + scoreString + " Points");
+
+	bounds = txt_totalScore.getLocalBounds();
+	txt_totalScore.setPosition((500 / 2) - (bounds.width / 2), 200);
+
+
+	txt_date.setString("Played on " + dayString + "." + monthString + "." + yearString + " at " + hourString + ":" + minuteString);
+	bounds = txt_date.getLocalBounds();
+	txt_date.setPosition((500 / 2) - (bounds.width / 2), 250);
 
 }

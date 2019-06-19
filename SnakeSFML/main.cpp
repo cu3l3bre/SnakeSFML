@@ -17,21 +17,19 @@
 #define GAMESIZE_X 500
 #define GAMESIZE_Y 500
 
+sf::Font global_font;
+
 using namespace std;
 
 
 int main()
 {
-	// start RNG with actual time
-	srand(time(0));
+
 
 #pragma region Sql
 
 
 	// öffnen der Datenabnk
-	string Name[3];
-	string Highscore[3];
-	string Date[3];
 
 	const char* dateiname = "Snake_Highscores.sqlite";
 
@@ -81,21 +79,6 @@ int main()
 						int datenposition = (zeile * anzahlSpalten) + spalte;
 
 						cout << ergebnisse[datenposition] << "  ";
-
-						if (datenposition == 0)
-						{
-							Name[zeile] = ergebnisse[datenposition];
-						}
-						else if (datenposition == 1)
-						{
-							Highscore[zeile] = ergebnisse[datenposition];
-						}
-						else if (datenposition == 2)
-						{
-							Date[zeile] = ergebnisse[datenposition];
-						}
-							
-
 					}
 
 					// Zeilenumbruch nach jeder Zeile
@@ -105,11 +88,6 @@ int main()
 
 
 			}
-			/*
-			cout << Name[0] << endl;
-			cout << Name[1] << endl;
-			cout << Name[2] << endl;
-			*/
 			//speicher wieder freigeben
 			sqlite3_free_table(ergebnisse);
 
@@ -129,6 +107,18 @@ int main()
 #pragma endregion
 
 
+	// start RNG with actual time
+	srand(time(0));
+
+
+	try
+	{
+		global_font.loadFromFile("arial.ttf");
+	}
+	catch (exception& ex)
+	{
+
+	}
 
 	// create the main window with its dimension and its title
 	sf::RenderWindow window(sf::VideoMode(GAMESIZE_X, GAMESIZE_Y), "Snake Game using SFML!");
@@ -138,87 +128,7 @@ int main()
 	window.setFramerateLimit(FPS);
 
 	// create a lvl object
-	Level lvl1;
-
-
-	// try catch
-	sf::Font font;
-	if (!font.loadFromFile("arial.ttf"))
-	{
-		// error...
-	}
-	
-
-	sf::FloatRect bounds;
-
-	sf::Text instrcution;
-	instrcution.setFont(font);
-	instrcution.setString("Press s to start or q to quit");
-	instrcution.setCharacterSize(24);
-	instrcution.setFillColor(sf::Color::Green);
-	instrcution.setStyle(sf::Text::Bold);
-	bounds = instrcution.getLocalBounds();
-	instrcution.setPosition((GAMESIZE_X/2) - (bounds.width / 2), 100);
-
-
-	sf::Text instrcution2;
-	instrcution2.setFont(font);
-	instrcution2.setString("Use a for left or d for right to control the snake GLHF");
-	instrcution2.setCharacterSize(16);
-	instrcution2.setFillColor(sf::Color::Green);
-	instrcution2.setStyle(sf::Text::Bold);
-	bounds = instrcution2.getLocalBounds();
-	instrcution2.setPosition((GAMESIZE_X / 2) - (bounds.width / 2), 450);
-
-
-	sf::Text instrcution3;
-	instrcution3.setFont(font);
-	instrcution3.setString("Use b to go back to the menu or q to quit");
-	instrcution3.setCharacterSize(16);
-	instrcution3.setFillColor(sf::Color::Green);
-	instrcution3.setStyle(sf::Text::Bold);
-	bounds = instrcution3.getLocalBounds();
-	instrcution3.setPosition((GAMESIZE_X / 2) - (bounds.width / 2), 450);
-
-
-
-
-
-
-	sf::Text gameOver;
-	gameOver.setFont(font);
-	gameOver.setString("**** GameOver ****");
-	gameOver.setCharacterSize(24);
-	gameOver.setFillColor(sf::Color::Red);
-	gameOver.setStyle(sf::Text::Bold);
-	bounds = gameOver.getLocalBounds();
-	gameOver.setPosition((GAMESIZE_X/2) - (bounds.width/2), 100);
-
-
-
-
-	sf::Text playtimeFood;
-	playtimeFood.setFont(font);
-	playtimeFood.setString("**** playtimefodd ****");
-	playtimeFood.setCharacterSize(20);
-	playtimeFood.setFillColor(sf::Color::Green);
-	playtimeFood.setStyle(sf::Text::Bold);
-	
-
-	sf::Text totalScore;
-	totalScore.setFont(font);
-	totalScore.setString("**** Total Score ****");
-	totalScore.setCharacterSize(20);
-	totalScore.setFillColor(sf::Color::Green);
-	totalScore.setStyle(sf::Text::Bold);
-
-
-	sf::Text date;
-	date.setFont(font);
-	date.setString("**** Date ****");
-	date.setCharacterSize(20);
-	date.setFillColor(sf::Color::Green);
-	date.setStyle(sf::Text::Bold);
+	Level lvl1(&global_font);
 
 
 	// Will be executed as long as the window is open
@@ -319,44 +229,13 @@ int main()
 			window.draw(lvl1.food);
 
 			
-
-
-
-
 			// check if GameOver condition is satisfied
 			lvl1.checkGameOver();
 
 			if (lvl1.gameOver)
 			{
 				lvl1.calculateStats();
-				//lvl1.showStats();
-
-				string scoreString = to_string(lvl1.score);
-				string foodString = to_string(lvl1.foodCount);
-				string timeElapsedString = to_string(lvl1.timeElapsed.asSeconds());
-				string yearString = to_string(lvl1.year);
-				string monthString = to_string(lvl1.month);
-				string dayString = to_string(lvl1.day);
-				string hourString = to_string(lvl1.hour);
-				string minuteString = to_string(lvl1.minute);
-
-				playtimeFood.setString("You lasted " + timeElapsedString + " seconds" + " and ate " + foodString + " food");
-
-				bounds = playtimeFood.getLocalBounds();
-				playtimeFood.setPosition((GAMESIZE_X / 2) - (bounds.width / 2), 150);
-
-
-				totalScore.setString("Your Score: " + scoreString + " Points");
-
-				bounds = totalScore.getLocalBounds();
-				totalScore.setPosition((GAMESIZE_X / 2) - (bounds.width / 2), 200);
-
-
-				date.setString("Played on " + dayString + "." + monthString + "." + yearString + " at " + hourString + ":" + minuteString);
-				bounds = date.getLocalBounds();
-				date.setPosition((GAMESIZE_X / 2) - (bounds.width / 2), 250);
-
-
+				lvl1.prepareStats();
 				window.clear();
 
 				// Draw the boundaries that limit the map
@@ -365,12 +244,11 @@ int main()
 					window.draw(lvl1.boundaries[i]);
 				}
 
-
-				window.draw(gameOver);
-				window.draw(playtimeFood);
-				window.draw(totalScore);
-				window.draw(date);
-				window.draw(instrcution3);
+				window.draw(lvl1.txt_gameOver);
+				window.draw(lvl1.txt_playtimeFood);
+				window.draw(lvl1.txt_totalScore);
+				window.draw(lvl1.txt_date);
+				window.draw(lvl1.txt_instrcution3);
 			}
 
 			// displays the items in the window
@@ -383,13 +261,10 @@ int main()
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::B))
 			{
 				lvl1.gameRunning = false;
-				lvl1 = Level();
-				//window.clear();
-				//window.display();
 
-				//window.close();
-				// maybe gamerunning = false
-				//lvl1.gameRunning = false;
+				// Get start values		
+				
+				lvl1 = Level(&global_font);
 			}
 		}
 
@@ -405,14 +280,10 @@ int main()
 				window.draw(lvl1.boundaries[i]);
 			}
 
-
-			window.draw(instrcution);
-			window.draw(instrcution2);
-
-
+			window.draw(lvl1.txt_instrcution);
+			window.draw(lvl1.txt_instrcution2);
 			window.display();
 		}
-
 	}
 
 	return 0;

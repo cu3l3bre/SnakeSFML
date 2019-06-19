@@ -9,33 +9,21 @@
 
 #include "point.h"
 #include <vector>
+#include <string>
 #include "time.h"
 #include "snake.h"
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 #include <SFML/System/Clock.hpp>
 
-/*
-#define EMPTYFIELD char(0);
-#define BOUNDARY '#';
-#define SNAKEHEAD 'X';
-#define SNAKEBODY '0';
-#define FOOD char(148);
-*/
-
 
 
 class Level
 {
 public:
-	/*
-	int rows = 20;
-	int cols = 20;
-	int points;
-	char levelPoints[20][20];
-	*/
-	Snake snake;
 
+
+	Snake snake;
 
 	Point foodLocation;
 	bool foodOnField;;
@@ -50,6 +38,30 @@ public:
 
 
 	sf::CircleShape food;
+
+	//sf::Font font;
+
+	sf::FloatRect bounds;
+	sf::Text txt_instrcution;
+	sf::Text txt_instrcution2;
+	sf::Text txt_instrcution3;
+	sf::Text txt_gameOver;
+	sf::Text txt_playtimeFood;
+	sf::Text txt_totalScore;
+	sf::Text txt_date;
+
+
+	std::string scoreString;
+	std::string foodString;
+	std::string timeElapsedString;
+	std::string yearString;
+	std::string monthString;
+	std::string dayString;
+	std::string hourString;
+	std::string minuteString;
+
+
+
 
 	int circleRadius;
 	int stepSize;
@@ -71,16 +83,10 @@ public:
 	int seconds;
 
 
-	Level();
+	Level(sf::Font*);
 	~Level();
 
 	// Methods
-
-	//void drawBoundaries();
-	//void updateLevel();
-
-	//void drawLevel();
-
 
 	void createBoundaries();
 
@@ -92,4 +98,7 @@ public:
 
 	void calculateStats();
 	void showStats();
+
+	void prepareStats();
+
 };
