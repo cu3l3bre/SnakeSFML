@@ -144,7 +144,7 @@ int main()
 			}
 		}
 
-
+		// Wait for keypress of the S Key
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) && !lvl1.gameRunning)
 		{
 			lvl1.gameRunning = true;
@@ -153,6 +153,7 @@ int main()
 			lvl1.clock.restart();
 		}
 
+		// Wait for keypress of the Q Key
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
 		{
 			window.close();

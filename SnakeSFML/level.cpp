@@ -15,9 +15,9 @@ using namespace std;
 // STD - Constructor
 Level::Level(sf::Font* newFont)
 {
-	circleRadius = SHAPESIZE / 2;
-	stepSize = SHAPESIZE;
-	offsetOrigin = SHAPESIZE / 2;
+	circleRadius = STEPSIZE / 2;
+	stepSize = STEPSIZE;
+	offsetOrigin = STEPSIZE / 2;
 
 
 	gameRunning = false;
@@ -26,8 +26,8 @@ Level::Level(sf::Font* newFont)
 	foodCount = 0;
 	score = 0.0;
 
-	rectangleSize.x = SHAPESIZE;
-	rectangleSize.y = SHAPESIZE;
+	rectangleSize.x = stepSize;
+	rectangleSize.y = stepSize;
 
 	boundary.setSize(rectangleSize);
 	boundary.setFillColor(sf::Color::Red);
@@ -128,8 +128,8 @@ void Level::checkGameOver()
 			gameOver = true;
 		}
 		// Check if snakes head is in boundaries
-		else if ((snake.snakePoints[0].row == 5) || (snake.snakePoints[0].row == 495) ||
-			(snake.snakePoints[0].col == 5) || (snake.snakePoints[0].col == 495))
+		else if ((snake.snakePoints[0].row == (stepSize/2)) || (snake.snakePoints[0].row == (500 - (stepSize/2)) ||
+			(snake.snakePoints[0].col == (stepSize / 2)) || (snake.snakePoints[0].col == (500 - (stepSize/2)))))
 		{
 			gameOver = true;
 		}
@@ -152,18 +152,37 @@ void Level::generateFood()
 		// with %8 we would get numbers from 0 to 7
 		// thats why we add +1 and we get numbers from 1 to 8 which are in the field
 
+		int firsPossibleValue = ((stepSize/2) + stepSize);
+		int lastPossibleValue = 500 - ((stepSize / 2) + stepSize);
 
-		foodLocation.row = ((rand() % 95)+ 3)*5;		// -2 because we dont want to spawn it on the boundaries
+		int moduloValue = ((firsPossibleValue-lastPossibleValue) / stepSize) + 1;
+
+		foodLocation.row = (((rand() % moduloValue)*stepSize) + firsPossibleValue);		// -2 because we dont want to spawn it on the boundaries
+		cout << foodLocation.row << endl;
+		
+
+		foodLocation.col = (((rand() % moduloValue)*stepSize) + firsPossibleValue);		// -2 because we dont want to spawn it on the boundaries
+		cout << foodLocation.col << endl;
+
+
+		/*
+		foodLocation.row = ((rand() % 95) + 3)*(stepSize / 2);		// -2 because we dont want to spawn it on the boundaries
 		if ((foodLocation.row % 10) == 0)
 		{
 			foodLocation.row += 5;
 		}
+		*/
 
+
+		/*
 		foodLocation.col = ((rand() % 95)+ 3)*5;
 		if ((foodLocation.col % 10) == 0)
 		{
 			foodLocation.col += 5;
 		}
+
+		*/
+
 
 		// check if food has been generated on snake
 		for (int i = 0; i < snake.snakePoints.size(); i++)
@@ -186,7 +205,7 @@ void Level::generateFood()
 		}
 	}
 
-	// Set Drwaing Origin for shape
+	// Set Drawing Origin for shape
 	food.setPosition(foodLocation.col - offsetOrigin, foodLocation.row - offsetOrigin);
 
 }
@@ -235,11 +254,11 @@ void Level::showStats()
 // Create Boundaries that limit the map
 void Level::createBoundaries()
 {
-	for (int i = 5; i <= 495; i += 5)
+	for (int i = (stepSize/2); i <= (500-(stepSize/2)); i += (stepSize/2))
 	{
-		for (int j = 5; j <= 495; j += 5)
+		for (int j = (stepSize / 2); j <= (500 - (stepSize / 2)); j += (stepSize / 2))
 		{
-			if ((i == 5) || (j == 5) || (i == 495) || (j == 495))
+			if ((i == (stepSize / 2)) || (j == (stepSize / 2)) || (i == (500 - (stepSize / 2))) || (j == (500 - (stepSize / 2))))
 			{
 
 				boundary.setPosition(i - offsetOrigin, j - offsetOrigin);	// set the origin of each boundary

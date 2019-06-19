@@ -12,7 +12,8 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 
-#define SHAPESIZE 10
+// for now choose 10 or 20
+#define STEPSIZE 20
 
 // Enum for Movement directions for the snake
 enum SnakeDirection

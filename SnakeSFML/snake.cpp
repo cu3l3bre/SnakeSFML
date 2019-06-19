@@ -13,14 +13,17 @@
 
 Snake::Snake()
 {
-	circleRadius = SHAPESIZE / 2;
-	stepSize = SHAPESIZE;
-	offsetOrigin = SHAPESIZE / 2;
+	circleRadius = STEPSIZE / 2;
+	stepSize = STEPSIZE;
+	offsetOrigin = STEPSIZE / 2;
 
-	snakeLength = 2;
+	snakeLength = 3;
 
-	location.row = 275;
-	location.col = 275;
+	//location.row = 275;
+	//location.col = 275;
+
+	location.row = ((stepSize/2) + (stepSize*10));
+	location.col = ((stepSize / 2)+ (stepSize * 10));
 
 
 	head.setRadius(circleRadius);
