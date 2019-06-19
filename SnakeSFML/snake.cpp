@@ -19,12 +19,8 @@ Snake::Snake()
 
 	snakeLength = 3;
 
-	//location.row = 275;
-	//location.col = 275;
-
-	location.row = ((stepSize/2) + (stepSize*10));
-	location.col = ((stepSize / 2)+ (stepSize * 10));
-
+	location.row = ((stepSize / 2) + (stepSize * 10));
+	location.col = ((stepSize / 2) + (stepSize * 10));
 
 	head.setRadius(circleRadius);
 	head.setFillColor(sf::Color::Red);

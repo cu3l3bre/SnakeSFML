@@ -35,16 +35,6 @@ Level::Level(sf::Font* newFont)
 	food.setRadius(circleRadius);
 	food.setFillColor(sf::Color::Yellow);
 
-	/*
-		try
-		{
-			font.loadFromFile("arial.ttf");
-		}
-		catch (exception& ex)
-		{
-
-		}
-	*/
 
 	txt_instrcution.setFont(*newFont);
 	txt_instrcution.setString("Press s to start or q to quit");
@@ -147,41 +137,26 @@ void Level::generateFood()
 		bool foodOnSnake = false;
 
 		// example
-		// rows = 10;
-		// boundaries are on 0 and 9
-		// with %8 we would get numbers from 0 to 7
-		// thats why we add +1 and we get numbers from 1 to 8 which are in the field
+		// Stepsize = 10;
+		// firsPossibleValue would be 15 (-> 5 is not possible because its the center of a boundary)
+		// lastPossibleValue would be 485 (-> 495 is not possible because its the center of a boundary)
+		// moduloValue would be: (470)/10+1 => 48
+		// with this we get values from 0 to 47
+		// possible values could be:
+		// ((0*stepsize) + firstpossiblevalue)
+		// (0 * 10) + 15 = 15
+		// (1 * 10) + 15 = 25
+		// (2 * 10) + 15 = 35......
+		// (47* 10) + 15 = 485
 
 		int firsPossibleValue = ((stepSize/2) + stepSize);
 		int lastPossibleValue = 500 - ((stepSize / 2) + stepSize);
 
 		int moduloValue = ((firsPossibleValue-lastPossibleValue) / stepSize) + 1;
 
-		foodLocation.row = (((rand() % moduloValue)*stepSize) + firsPossibleValue);		// -2 because we dont want to spawn it on the boundaries
-		cout << foodLocation.row << endl;
-		
+		foodLocation.row = (((rand() % moduloValue)*stepSize) + firsPossibleValue);
+		foodLocation.col = (((rand() % moduloValue)*stepSize) + firsPossibleValue);
 
-		foodLocation.col = (((rand() % moduloValue)*stepSize) + firsPossibleValue);		// -2 because we dont want to spawn it on the boundaries
-		cout << foodLocation.col << endl;
-
-
-		/*
-		foodLocation.row = ((rand() % 95) + 3)*(stepSize / 2);		// -2 because we dont want to spawn it on the boundaries
-		if ((foodLocation.row % 10) == 0)
-		{
-			foodLocation.row += 5;
-		}
-		*/
-
-
-		/*
-		foodLocation.col = ((rand() % 95)+ 3)*5;
-		if ((foodLocation.col % 10) == 0)
-		{
-			foodLocation.col += 5;
-		}
-
-		*/
 
 
 		// check if food has been generated on snake
@@ -195,17 +170,17 @@ void Level::generateFood()
 
 		if (foodOnSnake)
 		{
-			// excute while loop one more time
+			// Excute while loop one more time
 			foodGeneratedOnSnake = true;
 		}
 		else
 		{
-			// exit the while loop
+			// Exit the while loop
 			foodGeneratedOnSnake = false;
 		}
 	}
 
-	// Set Drawing Origin for shape
+	// Set drawing origin for shape
 	food.setPosition(foodLocation.col - offsetOrigin, foodLocation.row - offsetOrigin);
 
 }
@@ -281,7 +256,7 @@ void Level::checkSnakeAteFood()
 }
 
 
-// 
+// prepare stats for showing in main window
 void Level::prepareStats()
 {
 	scoreString = to_string(score);
