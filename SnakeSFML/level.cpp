@@ -12,6 +12,10 @@
 using namespace std;
 
 
+Level::Level()
+{
+}
+
 // STD - Constructor
 Level::Level(sf::Font* newFont)
 {
@@ -19,6 +23,13 @@ Level::Level(sf::Font* newFont)
 	stepSize = STEPSIZE;
 	offsetOrigin = STEPSIZE / 2;
 
+
+	pathToHighscoreFile = "Highscores.txt";
+	//inputFilestream(pathToHighscoreFile);
+	//outputFilestream;
+
+	//currentHighscoreScore = 0;
+	//currentHighscoreDate = "";
 
 	gameRunning = false;
 	gameOver = false;
@@ -130,6 +141,9 @@ void Level::checkGameOver()
 // Generate food at random location
 void Level::generateFood()
 {
+
+
+
 	bool foodGeneratedOnSnake = true;
 
 	while (foodGeneratedOnSnake)
@@ -284,4 +298,38 @@ void Level::prepareStats()
 	bounds = txt_date.getLocalBounds();
 	txt_date.setPosition((500 / 2) - (bounds.width / 2), 250);
 
+}
+
+
+void Level::readHighScoresFromFile()
+{
+	std::ifstream inputFilestream;
+
+	inputFilestream.open(pathToHighscoreFile);
+
+	while (inputFilestream.good()) {
+
+		// lesen einer Zeile
+		getline(inputFilestream, oneLine);
+
+		// diese Zeile ans Ende der Liste anfügen
+		fileContent.push_back(oneLine);
+	}
+
+	inputFilestream.close();
+	inputFilestream.clear();
+	
+}
+
+
+
+void Level::writeHighScoresToFile()
+{
+
+	std::ofstream outputFilestream;
+
+	outputFilestream.open(pathToHighscoreFile);
+	outputFilestream << to_string(currentHighscoreScore) << endl;
+	outputFilestream << currentHighscoreDate;
+	outputFilestream.close();
 }

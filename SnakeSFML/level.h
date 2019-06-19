@@ -9,6 +9,7 @@
 
 #include "point.h"
 #include <vector>
+#include <fstream>
 #include <string>
 #include "time.h"
 #include "snake.h"
@@ -31,6 +32,14 @@ public:
 	int score;
 	bool gameOver;
 	bool gameRunning;
+
+	std::string pathToHighscoreFile;
+	
+	std::string oneLine;
+	std::vector<std::string> fileContent;
+
+	int currentHighscoreScore;
+	std::string currentHighscoreDate;
 
 	sf::Vector2f rectangleSize;
 	sf::RectangleShape boundary;
@@ -82,7 +91,7 @@ public:
 	int minute;
 	int seconds;
 
-
+	Level();
 	Level(sf::Font*);
 	~Level();
 
@@ -100,5 +109,6 @@ public:
 	void showStats();
 
 	void prepareStats();
-
+	void readHighScoresFromFile();
+	void writeHighScoresToFile();
 };
