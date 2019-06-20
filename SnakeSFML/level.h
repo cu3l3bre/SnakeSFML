@@ -19,6 +19,7 @@
 #include <SFML/System.hpp>
 #include <SFML/System/Clock.hpp>
 
+#define GAMESIZE_XY 500
 
 // Class Level
 class Level
@@ -98,7 +99,6 @@ public:
 	~Level();			// Destructor
 
 	// Methods
-
 	void createBoundaries();		// Creates the boundaries that limit the field
 	void checkGameOver();			// Checks if the GameOver condition is satisfied
 	void generateFood();			// Places food on the field

@@ -1,7 +1,7 @@
 //**************************************************************************************************
 /*!
  @file           main.cpp
- @brief          Main programm for the application
+ @brief          Main programm for the snake game
  @date           17.06.2019
  @author         Daniel Schmunkamp
  */
@@ -12,99 +12,79 @@
 #include <string>
 #include <fstream>
 #include "sqlite3.h"
-
 #include "level.h"
-
-
-#define GAMESIZE_X 500
-#define GAMESIZE_Y 500
 
 sf::Font global_font;
 
 using namespace std;
 
-
+//--------------------------------------------------------------------------------------------------
+//! @brief     	Main Function of the snake game application
+//--------------------------------------------------------------------------------------------------
 int main()
 {
 
-
 #pragma region Sql
 
+	// Open database
 
-	// open database
+	const char* filename = "Snake_Highscores.sqlite";
 
-	const char* dateiname = "Snake_Highscores.sqlite";
+	ifstream filestream(filename);
 
-	ifstream dateistrom(dateiname);
-
-	if (!dateistrom.good()) {
-		cout << "Datei kann nicht geöffnet werden" << endl;
+	if (!filestream.good()) {
+		cout << "File cannont be opened" << endl;
 	}
 	else {
 
-		// create object for database
-		sqlite3* datenbank;
+		// Create object for database
+		sqlite3* database;
 
 		try {
-			sqlite3_open(dateiname, &datenbank);
-
-			
+			sqlite3_open(filename, &database);
 
 			const char* sqlSelectString = "SELECT * FROM Highscores"; 
+			char* errormessage;
 
-			char* fehlermeldung;
+			// Prepare object for result
+			char ** results = NULL;
+			int numberCols;
+			int numberRows;
 
-			// prepare object for result
-			char ** ergebnisse = NULL;
-			int anzahlSpalten;
-			int anzahlZeilen;
+			int errorcode = sqlite3_get_table(database, sqlSelectString, &results, &numberRows, &numberCols, &errormessage);
+			int errorcode2 = sqlite3_exec(database, "INSERT INTO..", NULL, NULL, &errormessage);
 
-			int fehlercode = sqlite3_get_table(datenbank, sqlSelectString, &ergebnisse, &anzahlZeilen, &anzahlSpalten, &fehlermeldung);
-
-			int fehlercode2 = sqlite3_exec(datenbank, "INSERT INTO..", NULL, NULL, &fehlermeldung);
-
-			// if an error occured
-			if (fehlercode != 0) {
-				cout << "Error: " << fehlermeldung << endl;
+			// If an error occured
+			if (errorcode != 0) {
+				cout << "Error: " << errormessage << endl;
 			}
 			else {
 
+				//results = [0,0][1,0][1,0][1,1][2,0][2,1]
 
-				//ergebnisse = [0,0][1,0][1,0][1,1][2,0][2,1]
+				// Do one more to get the head(description) of the list and to show them
+				for (int row = 0; row <= numberRows; row++) {
 
-				// eins weiter gehen, um auch die tabellenköpfe mit anzuzeigen
-				for (int zeile = 0; zeile <= anzahlZeilen; zeile++) {
+					for (int col = 0; col < numberCols; col++) {
 
-					for (int spalte = 0; spalte < anzahlSpalten; spalte++) {
+						// Calculate the postion in the results list
+						int dataposition = (row * numberCols) + col;
 
-						// Position in der Ergebnisluiste berechene
-						int datenposition = (zeile * anzahlSpalten) + spalte;
-
-						cout << ergebnisse[datenposition] << "  ";
+						cout << results[dataposition] << "  ";
 					}
 
-					// Zeilenumbruch nach jeder Zeile
 					cout << endl;
-
 				}
-
-
 			}
-			//speicher wieder freigeben
-			sqlite3_free_table(ergebnisse);
+			// Free memory
+			sqlite3_free_table(results);
 
 		}
 		catch (exception ex) {
-			cout << "Verbindung kann nicht geöffnet werden" << endl;
+			cout << "Connection cannot be opened" << endl;
 		}
-
-
 	}
-
-	dateistrom.close();
-
-
-	// anzeige aller Daten in der tablle highscore
+	filestream.close();
 
 #pragma endregion
 
@@ -112,29 +92,27 @@ int main()
 	// start RNG with actual time
 	srand(time(0));
 
-
 	try
 	{
 		global_font.loadFromFile("arial.ttf");
 	}
 	catch (exception& ex)
 	{
-
+		cout << "Could not load font arial.ttf" << endl;
 	}
 
 	// create the main window with its dimension and its title
-	sf::RenderWindow window(sf::VideoMode(GAMESIZE_X, GAMESIZE_Y), "Snake Game using SFML!");
+	sf::RenderWindow window(sf::VideoMode(GAMESIZE_XY, GAMESIZE_XY), "Snake Game using SFML!");
 
-
-	const float FPS = 8.0f; //The desired FPS. (The number of updates each second).
+	// Frames per seconds (the number of updates each second)
+	const float FPS = 8.0f;
 	window.setFramerateLimit(FPS);
 
-	// create a lvl object
+	// create a lvl object with the font as param
 	Level lvl1(&global_font);
 
-	// 
+	
 	lvl1.readHighScoresFromFile();
-
 	lvl1.currentHighscoreScore = stoi(lvl1.fileContent[0]);
 	lvl1.currentHighscoreDate = lvl1.fileContent[1];
 
@@ -211,8 +189,6 @@ int main()
 			// Set direction based on user input
 			lvl1.snake.setSnakeDirection();
 
-
-
 			// Clear the window
 			window.clear();
 
@@ -248,8 +224,7 @@ int main()
 
 				window.clear();
 
-				
-
+				// Check if a new highscore has been achieved
 				if (lvl1.score > lvl1.currentHighscoreScore)
 				{
 					lvl1.currentHighscoreScore = lvl1.score;
@@ -258,7 +233,7 @@ int main()
 				}
 
 
-
+				// Write highscore to file
 				lvl1.writeHighScoresToFile();
 
 				
@@ -276,7 +251,7 @@ int main()
 				window.draw(lvl1.txt_instrcution3);
 			}
 
-			// displays the items in the window
+			// Displays the items in the window
 			window.display();
 
 		}

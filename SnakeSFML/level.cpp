@@ -57,7 +57,7 @@ Level::Level(sf::Font* newFont)
 	txt_instrcution.setFillColor(sf::Color::Green);
 	txt_instrcution.setStyle(sf::Text::Bold);
 	bounds = txt_instrcution.getLocalBounds();
-	txt_instrcution.setPosition((500 / 2) - (bounds.width / 2), 100);
+	txt_instrcution.setPosition((GAMESIZE_XY / 2) - (bounds.width / 2), 100);
 
 
 	txt_instrcution2.setFont(*newFont);
@@ -66,7 +66,7 @@ Level::Level(sf::Font* newFont)
 	txt_instrcution2.setFillColor(sf::Color::Green);
 	txt_instrcution2.setStyle(sf::Text::Bold);
 	bounds = txt_instrcution2.getLocalBounds();
-	txt_instrcution2.setPosition((500 / 2) - (bounds.width / 2), 450);
+	txt_instrcution2.setPosition((GAMESIZE_XY / 2) - (bounds.width / 2), 450);
 
 
 	txt_instrcution3.setFont(*newFont);
@@ -75,7 +75,7 @@ Level::Level(sf::Font* newFont)
 	txt_instrcution3.setFillColor(sf::Color::Green);
 	txt_instrcution3.setStyle(sf::Text::Bold);
 	bounds = txt_instrcution3.getLocalBounds();
-	txt_instrcution3.setPosition((500 / 2) - (bounds.width / 2), 450);
+	txt_instrcution3.setPosition((GAMESIZE_XY / 2) - (bounds.width / 2), 450);
 
 
 	txt_gameOver.setFont(*newFont);
@@ -84,7 +84,7 @@ Level::Level(sf::Font* newFont)
 	txt_gameOver.setFillColor(sf::Color::Red);
 	txt_gameOver.setStyle(sf::Text::Bold);
 	bounds = txt_gameOver.getLocalBounds();
-	txt_gameOver.setPosition((500 / 2) - (bounds.width / 2), 100);
+	txt_gameOver.setPosition((GAMESIZE_XY / 2) - (bounds.width / 2), 100);
 
 
 	txt_playtimeFood.setFont(*newFont);
@@ -114,7 +114,7 @@ Level::Level(sf::Font* newFont)
 	txt_newHighScoreAchieved.setFillColor(sf::Color::Green);
 	txt_newHighScoreAchieved.setStyle(sf::Text::Bold);
 	bounds = txt_newHighScoreAchieved.getLocalBounds();
-	txt_newHighScoreAchieved.setPosition((500 / 2) - (bounds.width / 2), 375);
+	txt_newHighScoreAchieved.setPosition((GAMESIZE_XY / 2) - (bounds.width / 2), 375);
 
 
 	txt_currentHighScoreScore.setFont(*newFont);
@@ -143,11 +143,11 @@ Level::~Level(){}
 //--------------------------------------------------------------------------------------------------
 void Level::createBoundaries()
 {
-	for (int i = (stepSize / 2); i <= (500 - (stepSize / 2)); i += (stepSize / 2))
+	for (int i = (stepSize / 2); i <= (GAMESIZE_XY - (stepSize / 2)); i += (stepSize / 2))
 	{
-		for (int j = (stepSize / 2); j <= (500 - (stepSize / 2)); j += (stepSize / 2))
+		for (int j = (stepSize / 2); j <= (GAMESIZE_XY - (stepSize / 2)); j += (stepSize / 2))
 		{
-			if ((i == (stepSize / 2)) || (j == (stepSize / 2)) || (i == (500 - (stepSize / 2))) || (j == (500 - (stepSize / 2))))
+			if ((i == (stepSize / 2)) || (j == (stepSize / 2)) || (i == (GAMESIZE_XY - (stepSize / 2))) || (j == (GAMESIZE_XY - (stepSize / 2))))
 			{
 				boundary.setPosition(i - offsetOrigin, j - offsetOrigin);	// set the origin of each boundary
 				boundaries.push_back(boundary);
@@ -172,8 +172,8 @@ void Level::checkGameOver()
 			gameOver = true;
 		}
 		// Check if snakes head is in boundaries
-		else if ((snake.snakePoints[0].row == (stepSize/2)) || (snake.snakePoints[0].row == (500 - (stepSize/2)) ||
-			(snake.snakePoints[0].col == (stepSize / 2)) || (snake.snakePoints[0].col == (500 - (stepSize/2)))))
+		else if ((snake.snakePoints[0].row == (stepSize/2)) || (snake.snakePoints[0].row == (GAMESIZE_XY - (stepSize/2)) ||
+			(snake.snakePoints[0].col == (stepSize / 2)) || (snake.snakePoints[0].col == (GAMESIZE_XY - (stepSize/2)))))
 		{
 			gameOver = true;
 		}
@@ -206,7 +206,7 @@ void Level::generateFood()
 		// (47* 10) + 15 = 485
 
 		int firsPossibleValue = ((stepSize/2) + stepSize);
-		int lastPossibleValue = 500 - ((stepSize / 2) + stepSize);
+		int lastPossibleValue = GAMESIZE_XY - ((stepSize / 2) + stepSize);
 
 		int moduloValue = ((firsPossibleValue-lastPossibleValue) / stepSize) + 1;
 
@@ -353,15 +353,15 @@ void Level::prepareStats()
 	
 	txt_playtimeFood.setString("You lasted " + timeElapsedString + " seconds" + " and ate " + foodString + " food");
 	bounds = txt_playtimeFood.getLocalBounds();
-	txt_playtimeFood.setPosition((500 / 2) - (bounds.width / 2), 200);
+	txt_playtimeFood.setPosition((GAMESIZE_XY / 2) - (bounds.width / 2), 200);
 
 	txt_totalScore.setString("Your Score: " + scoreString + " Points");
 	bounds = txt_totalScore.getLocalBounds();
-	txt_totalScore.setPosition((500 / 2) - (bounds.width / 2), 250);
+	txt_totalScore.setPosition((GAMESIZE_XY / 2) - (bounds.width / 2), 250);
 
 	txt_date.setString("Played on " + dayString + "." + monthString + "." + yearString + " at " + hourString + ":" + minuteString);
 	bounds = txt_date.getLocalBounds();
-	txt_date.setPosition((500 / 2) - (bounds.width / 2), 300);
+	txt_date.setPosition((GAMESIZE_XY / 2) - (bounds.width / 2), 300);
 }
 
 
@@ -375,11 +375,11 @@ void Level::prepareCurrentHighscore()
 
 	txt_currentHighScoreScore.setString(currentHighscoreScoreString);
 	bounds = txt_currentHighScoreScore.getLocalBounds();
-	txt_currentHighScoreScore.setPosition((500 / 2) - (bounds.width / 2), 200);
+	txt_currentHighScoreScore.setPosition((GAMESIZE_XY / 2) - (bounds.width / 2), 200);
 
 	txt_currentHighScoreDate.setString(currentHighscoreDateString);
 	bounds = txt_currentHighScoreDate.getLocalBounds();
-	txt_currentHighScoreDate.setPosition((500 / 2) - (bounds.width / 2), 250);
+	txt_currentHighScoreDate.setPosition((GAMESIZE_XY / 2) - (bounds.width / 2), 250);
 }
 
 
