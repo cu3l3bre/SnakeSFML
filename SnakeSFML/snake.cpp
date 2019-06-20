@@ -1,16 +1,17 @@
-//////////////////////////////////////////////////////////////////////////////////////////////
-//																							//
-//	Author:		DS																			//
-//	Created:	2019.06.17																	//
-//																							//
-//////////////////////////////////////////////////////////////////////////////////////////////
+//**************************************************************************************************
+/*!
+ @file           snake.cpp
+ @brief          Methods for Snake class
+ @date           17.06.2019
+ @author         Daniel Schmunkamp
+ */
+ //**************************************************************************************************
 
 #include "snake.h"
 
-
-
-// Constructor
-
+//--------------------------------------------------------------------------------------------------
+//! @brief     	Constructor of Snake class
+//--------------------------------------------------------------------------------------------------
 Snake::Snake()
 {
 	circleRadius = STEPSIZE / 2;
@@ -41,14 +42,16 @@ Snake::Snake()
 }
 
 
-// Destructor
+//--------------------------------------------------------------------------------------------------
+//! @brief     	Destructor of Snake class
+//--------------------------------------------------------------------------------------------------
 Snake::~Snake(){}
 
 
-
-
-// Copy point values of the snake from top to bottom
-// Index 0 will be the new field when the snake has moved
+//--------------------------------------------------------------------------------------------------
+//! @brief     	Copy point values of the snake from top to bottom
+//! @brief     	Index 0 will be the new field when the snake has moved
+//--------------------------------------------------------------------------------------------------
 void Snake::updateSnake()
 {
 	// Removing old values wheres the snake has been
@@ -65,12 +68,12 @@ void Snake::updateSnake()
 }
 
 
-
-
-// set direction for snake
+//--------------------------------------------------------------------------------------------------
+//! @brief     	Sets direction for snake
+//--------------------------------------------------------------------------------------------------
 void Snake::setSnakeDirection()
 {
-	// write new point vlaue in 0
+	// Write new point value in 0
 	switch (direction)
 	{
 	case SnakeUp:		snakePoints[0].row -= stepSize; break;
@@ -80,15 +83,14 @@ void Snake::setSnakeDirection()
 	default:break;
 	}
 
-
 	// Set the drawing origin for the head of the snake 
-	// since the head has a radius of 5, we have to -5 the get to the upper left corner
 	head.setPosition(snakePoints[0].col - offsetOrigin, snakePoints[0].row - offsetOrigin);
-
 }
 
 
-// Check for Overflow
+//--------------------------------------------------------------------------------------------------
+//! @brief     	Check for Overflow if the new direction has been set
+//--------------------------------------------------------------------------------------------------
 void Snake::checkDirectionOverflow()
 {
 	if (direction == -1)

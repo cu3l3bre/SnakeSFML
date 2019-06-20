@@ -1,9 +1,11 @@
-//////////////////////////////////////////////////////////////////////////////////////////////
-//																							//
-//	Author:		DS																			//
-//	Created:	2019.06.17																	//
-//																							//
-//////////////////////////////////////////////////////////////////////////////////////////////
+//**************************************************************************************************
+/*!
+ @file           level.cpp
+ @brief          Methods for Level class
+ @date           17.06.2019
+ @author         Daniel Schmunkamp
+ */
+ //**************************************************************************************************
 
 
 #include "level.h"
@@ -28,11 +30,7 @@ Level::Level(sf::Font* newFont)
 
 
 	pathToHighscoreFile = "Highscores.txt";
-	//inputFilestream(pathToHighscoreFile);
-	//outputFilestream;
 
-	//currentHighscoreScore = 0;
-	//currentHighscoreDate = "";
 
 	gameRunning = false;
 	gameOver = false;
@@ -148,6 +146,27 @@ Level::~Level(){}
 // Methods
 
 
+// Create Boundaries that limit the map
+void Level::createBoundaries()
+{
+	for (int i = (stepSize / 2); i <= (500 - (stepSize / 2)); i += (stepSize / 2))
+	{
+		for (int j = (stepSize / 2); j <= (500 - (stepSize / 2)); j += (stepSize / 2))
+		{
+			if ((i == (stepSize / 2)) || (j == (stepSize / 2)) || (i == (500 - (stepSize / 2))) || (j == (500 - (stepSize / 2))))
+			{
+
+				boundary.setPosition(i - offsetOrigin, j - offsetOrigin);	// set the origin of each boundary
+				boundaries.push_back(boundary);
+			}
+		}
+	}
+
+
+}
+
+
+
 // GameOver is When Head of Snake is in its body or boundaries
 void Level::checkGameOver()
 {
@@ -245,6 +264,17 @@ void Level::eatFood()
 }
 
 
+
+// Check if the snake ate something and let it grow if so
+void Level::checkSnakeAteFood()
+{
+	if ((foodLocation.row == snake.snakePoints[0].row) && (foodLocation.col == snake.snakePoints[0].col))
+	{
+		eatFood();
+	}
+
+}
+
 // Calculate the stats of the game played
 void Level::calculateStats()
 {
@@ -275,34 +305,9 @@ void Level::showStats()
 }
 
 
-// Create Boundaries that limit the map
-void Level::createBoundaries()
-{
-	for (int i = (stepSize/2); i <= (500-(stepSize/2)); i += (stepSize/2))
-	{
-		for (int j = (stepSize / 2); j <= (500 - (stepSize / 2)); j += (stepSize / 2))
-		{
-			if ((i == (stepSize / 2)) || (j == (stepSize / 2)) || (i == (500 - (stepSize / 2))) || (j == (500 - (stepSize / 2))))
-			{
-
-				boundary.setPosition(i - offsetOrigin, j - offsetOrigin);	// set the origin of each boundary
-				boundaries.push_back(boundary);
-			}
-		}
-	}
 
 
-}
 
-// Check if the snake ate something and let it grow if so
-void Level::checkSnakeAteFood()
-{
-	if ((foodLocation.row == snake.snakePoints[0].row) && (foodLocation.col == snake.snakePoints[0].col))
-	{
-		eatFood();
-	}
-
-}
 
 
 // prepare stats for showing in main window
@@ -380,6 +385,25 @@ void Level::prepareStats()
 }
 
 
+
+void Level::prepareCurrentHighscore()
+{
+
+	currentHighscoreScoreString = "Current Highscore: " + fileContent[0];
+	currentHighscoreDateString = "Achieved at " + fileContent[1];
+
+
+	txt_currentHighScoreScore.setString(currentHighscoreScoreString);
+	bounds = txt_currentHighScoreScore.getLocalBounds();
+	txt_currentHighScoreScore.setPosition((500 / 2) - (bounds.width / 2), 200);
+
+	txt_currentHighScoreDate.setString(currentHighscoreDateString);
+	bounds = txt_currentHighScoreDate.getLocalBounds();
+	txt_currentHighScoreDate.setPosition((500 / 2) - (bounds.width / 2), 250);
+}
+
+
+
 void Level::readHighScoresFromFile()
 {
 	std::ifstream inputFilestream;
@@ -415,18 +439,3 @@ void Level::writeHighScoresToFile()
 
 
 
-void Level::prepareCurrentHighscore()
-{
-
-	currentHighscoreScoreString = "Current Highscore: " + fileContent[0];
-	currentHighscoreDateString = "Achieved at " + fileContent[1];
-
-
-	txt_currentHighScoreScore.setString(currentHighscoreScoreString);
-	bounds = txt_currentHighScoreScore.getLocalBounds();
-	txt_currentHighScoreScore.setPosition((500 / 2) - (bounds.width / 2), 200);
-
-	txt_currentHighScoreDate.setString(currentHighscoreDateString);
-	bounds = txt_currentHighScoreDate.getLocalBounds();
-	txt_currentHighScoreDate.setPosition((500 / 2) - (bounds.width / 2), 250);
-}
