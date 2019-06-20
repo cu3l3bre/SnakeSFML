@@ -7,21 +7,24 @@
  */
  //**************************************************************************************************
 
-
 #include "level.h"
 #include <iostream>
 #include <sstream>
 #include <iomanip>
 
-
 using namespace std;
 
 
+//--------------------------------------------------------------------------------------------------
+//! @brief     	Constructor of Level class
+//--------------------------------------------------------------------------------------------------
 Level::Level()
 {
 }
 
-// STD - Constructor
+//--------------------------------------------------------------------------------------------------
+//! @brief     	Constructor of Level class with fonts as param
+//--------------------------------------------------------------------------------------------------
 Level::Level(sf::Font* newFont)
 {
 	circleRadius = STEPSIZE / 2;
@@ -56,7 +59,7 @@ Level::Level(sf::Font* newFont)
 	bounds = txt_instrcution.getLocalBounds();
 	txt_instrcution.setPosition((500 / 2) - (bounds.width / 2), 100);
 
-	
+
 	txt_instrcution2.setFont(*newFont);
 	txt_instrcution2.setString("Use [a] for left or [d] for right to control the snake GLHF");
 	txt_instrcution2.setCharacterSize(16);
@@ -66,7 +69,6 @@ Level::Level(sf::Font* newFont)
 	txt_instrcution2.setPosition((500 / 2) - (bounds.width / 2), 450);
 
 
-	
 	txt_instrcution3.setFont(*newFont);
 	txt_instrcution3.setString("Use [b] to go back to the menu or [q] to quit");
 	txt_instrcution3.setCharacterSize(16);
@@ -97,8 +99,8 @@ Level::Level(sf::Font* newFont)
 	txt_totalScore.setCharacterSize(20);
 	txt_totalScore.setFillColor(sf::Color::Green);
 	txt_totalScore.setStyle(sf::Text::Bold);
-
 	
+
 	txt_date.setFont(*newFont);
 	txt_date.setString("**** Dummy Date ****");
 	txt_date.setCharacterSize(20);
@@ -115,38 +117,30 @@ Level::Level(sf::Font* newFont)
 	txt_newHighScoreAchieved.setPosition((500 / 2) - (bounds.width / 2), 375);
 
 
-
-
-
-
 	txt_currentHighScoreScore.setFont(*newFont);
 	txt_currentHighScoreScore.setString("**** Dummy currentHighScoreScore ****");
 	txt_currentHighScoreScore.setCharacterSize(20);
 	txt_currentHighScoreScore.setFillColor(sf::Color::Green);
 	txt_currentHighScoreScore.setStyle(sf::Text::Bold);
 
+
 	txt_currentHighScoreDate.setFont(*newFont);
 	txt_currentHighScoreDate.setString("**** Dummy currentHighScoreDate ****");
 	txt_currentHighScoreDate.setCharacterSize(20);
 	txt_currentHighScoreDate.setFillColor(sf::Color::Green);
 	txt_currentHighScoreDate.setStyle(sf::Text::Bold);
-
-
-
-
-
-	
 }
 
 
-// Destructor
+//--------------------------------------------------------------------------------------------------
+//! @brief     	Destructor of Level class
+//--------------------------------------------------------------------------------------------------
 Level::~Level(){}
 
 
-// Methods
-
-
-// Create Boundaries that limit the map
+//--------------------------------------------------------------------------------------------------
+//! @brief     	Creates boundaries that limit the map
+//--------------------------------------------------------------------------------------------------
 void Level::createBoundaries()
 {
 	for (int i = (stepSize / 2); i <= (500 - (stepSize / 2)); i += (stepSize / 2))
@@ -155,23 +149,20 @@ void Level::createBoundaries()
 		{
 			if ((i == (stepSize / 2)) || (j == (stepSize / 2)) || (i == (500 - (stepSize / 2))) || (j == (500 - (stepSize / 2))))
 			{
-
 				boundary.setPosition(i - offsetOrigin, j - offsetOrigin);	// set the origin of each boundary
 				boundaries.push_back(boundary);
 			}
 		}
 	}
-
-
 }
 
 
-
-// GameOver is When Head of Snake is in its body or boundaries
+//--------------------------------------------------------------------------------------------------
+//! @brief     	Checks for GameOver (when head of snake is in its body or boundaries)
+//--------------------------------------------------------------------------------------------------
 void Level::checkGameOver()
 {
-	//bool gameOver = false;
-	// Starts at 1 because Head is 0
+	// Starts at 1 because head is 0
 	for (int i = 1; i < snake.snakePoints.size(); i++)
 	{
 		// Check if snakes head is in its body
@@ -190,12 +181,11 @@ void Level::checkGameOver()
 }
 
 
-// Generate food at random location
+//--------------------------------------------------------------------------------------------------
+//! @brief     	Generates food at a random location on the field
+//--------------------------------------------------------------------------------------------------
 void Level::generateFood()
 {
-
-
-
 	bool foodGeneratedOnSnake = true;
 
 	while (foodGeneratedOnSnake)
@@ -223,8 +213,6 @@ void Level::generateFood()
 		foodLocation.row = (((rand() % moduloValue)*stepSize) + firsPossibleValue);
 		foodLocation.col = (((rand() % moduloValue)*stepSize) + firsPossibleValue);
 
-
-
 		// check if food has been generated on snake
 		for (int i = 0; i < snake.snakePoints.size(); i++)
 		{
@@ -248,11 +236,12 @@ void Level::generateFood()
 
 	// Set drawing origin for shape
 	food.setPosition(foodLocation.col - offsetOrigin, foodLocation.row - offsetOrigin);
-
 }
 
 
-//add new body part to snake if it has eaten some food
+//--------------------------------------------------------------------------------------------------
+//! @brief     	Adds new body part to snake if it has eaten some food
+//--------------------------------------------------------------------------------------------------
 void Level::eatFood()
 {
 	foodOnField = false;
@@ -264,18 +253,21 @@ void Level::eatFood()
 }
 
 
-
-// Check if the snake ate something and let it grow if so
+//--------------------------------------------------------------------------------------------------
+//! @brief     	Checks if the snake found the food on the field
+//--------------------------------------------------------------------------------------------------
 void Level::checkSnakeAteFood()
 {
 	if ((foodLocation.row == snake.snakePoints[0].row) && (foodLocation.col == snake.snakePoints[0].col))
 	{
 		eatFood();
 	}
-
 }
 
-// Calculate the stats of the game played
+
+//--------------------------------------------------------------------------------------------------
+//! @brief     	Calculates the stats of the game played
+//--------------------------------------------------------------------------------------------------
 void Level::calculateStats()
 {
 	timeElapsed = clock.getElapsedTime();
@@ -295,7 +287,10 @@ void Level::calculateStats()
 	seconds = nowLocal.tm_sec;
 }
 
-// Show the results in the console
+
+//--------------------------------------------------------------------------------------------------
+//! @brief     	Shows the results in the console
+//--------------------------------------------------------------------------------------------------
 void Level::showStats()
 {
 	cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!! GAME OVER !!!!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
@@ -305,25 +300,18 @@ void Level::showStats()
 }
 
 
-
-
-
-
-
-// prepare stats for showing in main window
+//--------------------------------------------------------------------------------------------------
+//! @brief     	Prepares the stats for showing them in the main window
+//--------------------------------------------------------------------------------------------------
 void Level::prepareStats()
 {
 	stringstream stream;
 	stream << setprecision(6) << timeElapsedSeconds;
 	timeElapsedString = stream.str();
 	
-
 	scoreString = to_string(score);
 	foodString = to_string(foodCount);
 
-//	timeElapsedString = to_string(timeElapsed.asSeconds());
-	//timeElapsedString = to_string(timeElapsedSeconds);
-	
 	yearString = to_string(year);
 	
 	if (month > 9)
@@ -363,35 +351,27 @@ void Level::prepareStats()
 		minuteString = "0" + to_string(minute);
 	}
 	
-
-
-
 	txt_playtimeFood.setString("You lasted " + timeElapsedString + " seconds" + " and ate " + foodString + " food");
-
 	bounds = txt_playtimeFood.getLocalBounds();
 	txt_playtimeFood.setPosition((500 / 2) - (bounds.width / 2), 200);
 
-
 	txt_totalScore.setString("Your Score: " + scoreString + " Points");
-
 	bounds = txt_totalScore.getLocalBounds();
 	txt_totalScore.setPosition((500 / 2) - (bounds.width / 2), 250);
-
 
 	txt_date.setString("Played on " + dayString + "." + monthString + "." + yearString + " at " + hourString + ":" + minuteString);
 	bounds = txt_date.getLocalBounds();
 	txt_date.setPosition((500 / 2) - (bounds.width / 2), 300);
-
 }
 
 
-
+//--------------------------------------------------------------------------------------------------
+//! @brief     	Prepares the current highscore for showing it in the main window
+//--------------------------------------------------------------------------------------------------
 void Level::prepareCurrentHighscore()
 {
-
 	currentHighscoreScoreString = "Current Highscore: " + fileContent[0];
 	currentHighscoreDateString = "Achieved at " + fileContent[1];
-
 
 	txt_currentHighScoreScore.setString(currentHighscoreScoreString);
 	bounds = txt_currentHighScoreScore.getLocalBounds();
@@ -403,7 +383,9 @@ void Level::prepareCurrentHighscore()
 }
 
 
-
+//--------------------------------------------------------------------------------------------------
+//! @brief     	Reads the current highscore stats from the file
+//--------------------------------------------------------------------------------------------------
 void Level::readHighScoresFromFile()
 {
 	std::ifstream inputFilestream;
@@ -412,20 +394,21 @@ void Level::readHighScoresFromFile()
 
 	while (inputFilestream.good()) {
 
-		// lesen einer Zeile
+		// Read one line
 		getline(inputFilestream, oneLine);
 
-		// diese Zeile ans Ende der Liste anfügen
+		// push it at the end of the list
 		fileContent.push_back(oneLine);
 	}
 
 	inputFilestream.close();
 	inputFilestream.clear();
-	
 }
 
 
-
+//--------------------------------------------------------------------------------------------------
+//! @brief     	Writes the current highscore stats to the file
+//--------------------------------------------------------------------------------------------------
 void Level::writeHighScoresToFile()
 {
 
@@ -436,6 +419,3 @@ void Level::writeHighScoresToFile()
 	outputFilestream << currentHighscoreDate;
 	outputFilestream.close();
 }
-
-
-
