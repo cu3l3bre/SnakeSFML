@@ -26,14 +26,13 @@ Snake::Snake()
 	location.row = ((stepSize / 2) + (stepSize * 10));
 	location.col = ((stepSize / 2) + (stepSize * 10));
 
-	// Set params for the snake head
+	// Set params for the snake head shape
 	head.setRadius(circleRadius);
 	head.setFillColor(sf::Color::Red);
 
 	// Set params for the snake body parts
 	body.setRadius(circleRadius);
 	body.setFillColor(sf::Color::Green);
-
 
 	// Generate the head and body for the snake in a vertical line downwards
 	for (int i = 0; i < snakeLength; i++)

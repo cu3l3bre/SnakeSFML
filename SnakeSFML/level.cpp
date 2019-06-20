@@ -27,30 +27,34 @@ Level::Level()
 //--------------------------------------------------------------------------------------------------
 Level::Level(sf::Font* newFont)
 {
+	// Set params for drawing stuff depending on the stepsize
 	circleRadius = STEPSIZE / 2;
 	stepSize = STEPSIZE;
 	offsetOrigin = STEPSIZE / 2;
 
+	// Set path to highscore file (located where the main.cpp is)
+	pathToHighscoreFile = "Highsscores.txt";
 
-	pathToHighscoreFile = "Highscores.txt";
-
-
+	// Set some inital values
 	gameRunning = false;
 	gameOver = false;
 	foodOnField = false;
 	foodCount = 0;
-	score = 0.0;
+	score = 0;
 
+	// Set the size for a rectangle
 	rectangleSize.x = stepSize;
 	rectangleSize.y = stepSize;
 
+	// Set params for one boundary shape
 	boundary.setSize(rectangleSize);
 	boundary.setFillColor(sf::Color::Red);
 
+	// Set params for the food shape
 	food.setRadius(circleRadius);
 	food.setFillColor(sf::Color::Yellow);
 
-
+	// Set params for diffenrent texts
 	txt_instrcution.setFont(*newFont);
 	txt_instrcution.setString("Press [s] to start or [q] to quit");
 	txt_instrcution.setCharacterSize(24);
@@ -58,7 +62,6 @@ Level::Level(sf::Font* newFont)
 	txt_instrcution.setStyle(sf::Text::Bold);
 	bounds = txt_instrcution.getLocalBounds();
 	txt_instrcution.setPosition((GAMESIZE_XY / 2) - (bounds.width / 2), 100);
-
 
 	txt_instrcution2.setFont(*newFont);
 	txt_instrcution2.setString("Use [a] for left or [d] for right to control the snake GLHF");
@@ -68,7 +71,6 @@ Level::Level(sf::Font* newFont)
 	bounds = txt_instrcution2.getLocalBounds();
 	txt_instrcution2.setPosition((GAMESIZE_XY / 2) - (bounds.width / 2), 450);
 
-
 	txt_instrcution3.setFont(*newFont);
 	txt_instrcution3.setString("Use [b] to go back to the menu or [q] to quit");
 	txt_instrcution3.setCharacterSize(16);
@@ -76,7 +78,6 @@ Level::Level(sf::Font* newFont)
 	txt_instrcution3.setStyle(sf::Text::Bold);
 	bounds = txt_instrcution3.getLocalBounds();
 	txt_instrcution3.setPosition((GAMESIZE_XY / 2) - (bounds.width / 2), 450);
-
 
 	txt_gameOver.setFont(*newFont);
 	txt_gameOver.setString("**** GameOver ****");
@@ -86,27 +87,23 @@ Level::Level(sf::Font* newFont)
 	bounds = txt_gameOver.getLocalBounds();
 	txt_gameOver.setPosition((GAMESIZE_XY / 2) - (bounds.width / 2), 100);
 
-
 	txt_playtimeFood.setFont(*newFont);
 	txt_playtimeFood.setString("**** Dummy playtimefood ****");
 	txt_playtimeFood.setCharacterSize(20);
 	txt_playtimeFood.setFillColor(sf::Color::Green);
 	txt_playtimeFood.setStyle(sf::Text::Bold);
 
-	
 	txt_totalScore.setFont(*newFont);
 	txt_totalScore.setString("**** Dummy Total Score ****");
 	txt_totalScore.setCharacterSize(20);
 	txt_totalScore.setFillColor(sf::Color::Green);
 	txt_totalScore.setStyle(sf::Text::Bold);
 	
-
 	txt_date.setFont(*newFont);
 	txt_date.setString("**** Dummy Date ****");
 	txt_date.setCharacterSize(20);
 	txt_date.setFillColor(sf::Color::Green);
 	txt_date.setStyle(sf::Text::Bold);
-
 
 	txt_newHighScoreAchieved.setFont(*newFont);
 	txt_newHighScoreAchieved.setString("!! Congrats, you achieved a new highscore !!");
@@ -116,13 +113,11 @@ Level::Level(sf::Font* newFont)
 	bounds = txt_newHighScoreAchieved.getLocalBounds();
 	txt_newHighScoreAchieved.setPosition((GAMESIZE_XY / 2) - (bounds.width / 2), 375);
 
-
 	txt_currentHighScoreScore.setFont(*newFont);
 	txt_currentHighScoreScore.setString("**** Dummy currentHighScoreScore ****");
 	txt_currentHighScoreScore.setCharacterSize(20);
 	txt_currentHighScoreScore.setFillColor(sf::Color::Green);
 	txt_currentHighScoreScore.setStyle(sf::Text::Bold);
-
 
 	txt_currentHighScoreDate.setFont(*newFont);
 	txt_currentHighScoreDate.setString("**** Dummy currentHighScoreDate ****");
@@ -244,11 +239,18 @@ void Level::generateFood()
 //--------------------------------------------------------------------------------------------------
 void Level::eatFood()
 {
+	// Now there is no food on the field
 	foodOnField = false;
+
+	// New snake body part with a new location(0,0), will be overwritten when "updateSnake" method is executed
 	Point newBodyPart;
 	newBodyPart.row = 0;
 	newBodyPart.col = 0;
+	
+	// Add the new body part at the end of the existing bodypart list
 	snake.snakePoints.push_back(newBodyPart);
+
+	// Food counter +1
 	foodCount++;
 }
 
@@ -270,12 +272,15 @@ void Level::checkSnakeAteFood()
 //--------------------------------------------------------------------------------------------------
 void Level::calculateStats()
 {
+	// Get the time in seconds and round it
 	timeElapsed = clock.getElapsedTime();
 	timeElapsedSeconds = timeElapsed.asSeconds();
-
 	timeElapsedSeconds = ceilf(timeElapsedSeconds * 100) / 100;
+	
+	// Calculate the score depending on the food eaten
 	score = foodCount * 100;
 
+	// Get the current date and time
 	timeNow = time(0);
 	localtime_s(&nowLocal, &timeNow);
 
@@ -314,6 +319,7 @@ void Level::prepareStats()
 
 	yearString = to_string(year);
 	
+	// Some if statements for a better "look" 
 	if (month > 9)
 	{
 		monthString = to_string(month);
@@ -331,7 +337,6 @@ void Level::prepareStats()
 	{
 		dayString = "0" + to_string(day);
 	}
-	
 	
 	if (hour > 9)
 	{
@@ -351,6 +356,7 @@ void Level::prepareStats()
 		minuteString = "0" + to_string(minute);
 	}
 	
+	// Set texts for showing in the main window based on the stats achieved
 	txt_playtimeFood.setString("You lasted " + timeElapsedString + " seconds" + " and ate " + foodString + " food");
 	bounds = txt_playtimeFood.getLocalBounds();
 	txt_playtimeFood.setPosition((GAMESIZE_XY / 2) - (bounds.width / 2), 200);
@@ -370,8 +376,9 @@ void Level::prepareStats()
 //--------------------------------------------------------------------------------------------------
 void Level::prepareCurrentHighscore()
 {
-	currentHighscoreScoreString = "Current Highscore: " + fileContent[0];
-	currentHighscoreDateString = "Achieved at " + fileContent[1];
+	// Set some texts for the main window
+	currentHighscoreScoreString = "Current Highscore: " + fileContent[0];	// Score from file
+	currentHighscoreDateString = "Achieved at " + fileContent[1];			// Date from file
 
 	txt_currentHighScoreScore.setString(currentHighscoreScoreString);
 	bounds = txt_currentHighScoreScore.getLocalBounds();
@@ -390,6 +397,7 @@ void Level::readHighScoresFromFile()
 {
 	std::ifstream inputFilestream;
 
+	// Open the input filestream
 	inputFilestream.open(pathToHighscoreFile);
 
 	while (inputFilestream.good()) {
@@ -397,12 +405,12 @@ void Level::readHighScoresFromFile()
 		// Read one line
 		getline(inputFilestream, oneLine);
 
-		// push it at the end of the list
+		// Push it at the end of the list
 		fileContent.push_back(oneLine);
 	}
 
+	// Close the input file stream
 	inputFilestream.close();
-	inputFilestream.clear();
 }
 
 
@@ -411,11 +419,15 @@ void Level::readHighScoresFromFile()
 //--------------------------------------------------------------------------------------------------
 void Level::writeHighScoresToFile()
 {
-
 	std::ofstream outputFilestream;
 
+	// Open the output filestream
 	outputFilestream.open(pathToHighscoreFile);
+
+	// Write score and date to the file
 	outputFilestream << to_string(currentHighscoreScore) << endl;
 	outputFilestream << currentHighscoreDate;
+
+	// Close the output file stream
 	outputFilestream.close();
 }
