@@ -73,6 +73,8 @@ public:
 	std::string hourString;
 	std::string minuteString;
 
+	std::string currentHighscoreScoreString;
+	std::string currentHighscoreDateString;
 	
 
 
@@ -115,6 +117,7 @@ public:
 	void showStats();
 
 	void prepareStats();
+	void prepareCurrentHighscore();
 	void readHighScoresFromFile();
 	void writeHighScoresToFile();
 

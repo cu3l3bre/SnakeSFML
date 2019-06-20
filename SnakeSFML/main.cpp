@@ -299,6 +299,7 @@ int main()
 		else
 		{
 			lvl1.createBoundaries();
+			lvl1.prepareCurrentHighscore();
 
 			window.clear();
 
@@ -310,6 +311,10 @@ int main()
 
 			window.draw(lvl1.txt_instrcution);
 			window.draw(lvl1.txt_instrcution2);
+
+			window.draw(lvl1.txt_currentHighScoreScore);
+			window.draw(lvl1.txt_currentHighScoreDate);
+
 			window.display();
 		}
 	}

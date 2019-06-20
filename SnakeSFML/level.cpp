@@ -48,7 +48,7 @@ Level::Level(sf::Font* newFont)
 
 
 	txt_instrcution.setFont(*newFont);
-	txt_instrcution.setString("Press s to start or q to quit");
+	txt_instrcution.setString("Press [s] to start or [q] to quit");
 	txt_instrcution.setCharacterSize(24);
 	txt_instrcution.setFillColor(sf::Color::Green);
 	txt_instrcution.setStyle(sf::Text::Bold);
@@ -57,7 +57,7 @@ Level::Level(sf::Font* newFont)
 
 	
 	txt_instrcution2.setFont(*newFont);
-	txt_instrcution2.setString("Use a for left or d for right to control the snake GLHF");
+	txt_instrcution2.setString("Use [a] for left or [d] for right to control the snake GLHF");
 	txt_instrcution2.setCharacterSize(16);
 	txt_instrcution2.setFillColor(sf::Color::Green);
 	txt_instrcution2.setStyle(sf::Text::Bold);
@@ -67,7 +67,7 @@ Level::Level(sf::Font* newFont)
 
 	
 	txt_instrcution3.setFont(*newFont);
-	txt_instrcution3.setString("Use b to go back to the menu or q to quit");
+	txt_instrcution3.setString("Use [b] to go back to the menu or [q] to quit");
 	txt_instrcution3.setCharacterSize(16);
 	txt_instrcution3.setFillColor(sf::Color::Green);
 	txt_instrcution3.setStyle(sf::Text::Bold);
@@ -105,6 +105,16 @@ Level::Level(sf::Font* newFont)
 	txt_date.setStyle(sf::Text::Bold);
 
 
+	txt_newHighScoreAchieved.setFont(*newFont);
+	txt_newHighScoreAchieved.setString("!! Congrats, you achieved a new highscore !!");
+	txt_newHighScoreAchieved.setCharacterSize(20);
+	txt_newHighScoreAchieved.setFillColor(sf::Color::Green);
+	txt_newHighScoreAchieved.setStyle(sf::Text::Bold);
+	bounds = txt_newHighScoreAchieved.getLocalBounds();
+	txt_newHighScoreAchieved.setPosition((500 / 2) - (bounds.width / 2), 350);
+
+
+
 
 
 
@@ -123,13 +133,7 @@ Level::Level(sf::Font* newFont)
 
 
 
-	txt_newHighScoreAchieved.setFont(*newFont);
-	txt_newHighScoreAchieved.setString("!! Congrats, you achieved a new highscore !!");
-	txt_newHighScoreAchieved.setCharacterSize(20);
-	txt_newHighScoreAchieved.setFillColor(sf::Color::Green);
-	txt_newHighScoreAchieved.setStyle(sf::Text::Bold);
-	bounds = txt_newHighScoreAchieved.getLocalBounds();
-	txt_newHighScoreAchieved.setPosition((500 / 2) - (bounds.width / 2), 350);
+
 	
 }
 
@@ -361,7 +365,7 @@ void Level::writeHighScoresToFile()
 }
 
 
-
+// raus
 void Level::checkNewHighscore()
 {
 	if (score > currentHighscoreScore)
@@ -370,4 +374,20 @@ void Level::checkNewHighscore()
 		currentHighscoreDate = dayString + "." + monthString + "." + yearString + " at " + hourString + ":" + minuteString;
 	}
 
+}
+
+void Level::prepareCurrentHighscore()
+{
+
+	currentHighscoreScoreString = "Current Highscore: " + fileContent[0];
+	currentHighscoreDateString = "Achieved at " + fileContent[1];
+
+
+	txt_currentHighScoreScore.setString(currentHighscoreScoreString);
+	bounds = txt_currentHighScoreScore.getLocalBounds();
+	txt_currentHighScoreScore.setPosition((500 / 2) - (bounds.width / 2), 250);
+
+	txt_currentHighScoreDate.setString(currentHighscoreDateString);
+	bounds = txt_currentHighScoreDate.getLocalBounds();
+	txt_currentHighScoreDate.setPosition((500 / 2) - (bounds.width / 2), 300);
 }
