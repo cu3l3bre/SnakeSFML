@@ -8,6 +8,9 @@
 
 #include "level.h"
 #include <iostream>
+#include <sstream>
+#include <iomanip>
+
 
 using namespace std;
 
@@ -111,7 +114,7 @@ Level::Level(sf::Font* newFont)
 	txt_newHighScoreAchieved.setFillColor(sf::Color::Green);
 	txt_newHighScoreAchieved.setStyle(sf::Text::Bold);
 	bounds = txt_newHighScoreAchieved.getLocalBounds();
-	txt_newHighScoreAchieved.setPosition((500 / 2) - (bounds.width / 2), 350);
+	txt_newHighScoreAchieved.setPosition((500 / 2) - (bounds.width / 2), 375);
 
 
 
@@ -246,8 +249,10 @@ void Level::eatFood()
 void Level::calculateStats()
 {
 	timeElapsed = clock.getElapsedTime();
+	timeElapsedSeconds = timeElapsed.asSeconds();
 
-	score = round((((foodCount + 1) * 10) - (timeElapsed.asSeconds()*0.4)) * 100);
+	timeElapsedSeconds = ceilf(timeElapsedSeconds * 100) / 100;
+	score = round((foodCount * 100) + (timeElapsedSeconds* 10));
 
 	timeNow = time(0);
 	localtime_s(&nowLocal, &timeNow);
@@ -264,7 +269,7 @@ void Level::calculateStats()
 void Level::showStats()
 {
 	cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!! GAME OVER !!!!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
-	cout << "Your Run lastet " << timeElapsed.asSeconds() << " seconds! and ate " << foodCount << " Food! Good Job :)" << endl;
+	cout << "Your Run lastet " << timeElapsedSeconds << " seconds! and ate " << foodCount << " Food! Good Job :)" << endl;
 	cout << "Your total score is: " << score << " Keep up the good work!" << endl;
 	cout << "Played on " << day << "." << month << "." << year << " at " << hour << ":" << minute << ":" << seconds << endl;
 }
@@ -303,30 +308,74 @@ void Level::checkSnakeAteFood()
 // prepare stats for showing in main window
 void Level::prepareStats()
 {
+	stringstream stream;
+	stream << setprecision(6) << timeElapsedSeconds;
+	timeElapsedString = stream.str();
+	
+
 	scoreString = to_string(score);
 	foodString = to_string(foodCount);
-	timeElapsedString = to_string(timeElapsed.asSeconds());
+
+//	timeElapsedString = to_string(timeElapsed.asSeconds());
+	//timeElapsedString = to_string(timeElapsedSeconds);
+	
 	yearString = to_string(year);
-	monthString = to_string(month);
-	dayString = to_string(day);
-	hourString = to_string(hour);
-	minuteString = to_string(minute);
+	
+	if (month > 9)
+	{
+		monthString = to_string(month);
+	}
+	else
+	{
+		monthString = "0" + to_string(month);
+	}
+	
+	if (day > 9)
+	{
+		dayString = to_string(day);
+	}
+	else
+	{
+		dayString = "0" + to_string(day);
+	}
+	
+	
+	if (hour > 9)
+	{
+		hourString = to_string(hour);
+	}
+	else
+	{
+		hourString = "0" + to_string(hour);
+	}
+
+	if (minute > 9)
+	{
+		minuteString = to_string(minute);
+	}
+	else
+	{
+		minuteString = "0" + to_string(minute);
+	}
+	
+
+
 
 	txt_playtimeFood.setString("You lasted " + timeElapsedString + " seconds" + " and ate " + foodString + " food");
 
 	bounds = txt_playtimeFood.getLocalBounds();
-	txt_playtimeFood.setPosition((500 / 2) - (bounds.width / 2), 150);
+	txt_playtimeFood.setPosition((500 / 2) - (bounds.width / 2), 200);
 
 
 	txt_totalScore.setString("Your Score: " + scoreString + " Points");
 
 	bounds = txt_totalScore.getLocalBounds();
-	txt_totalScore.setPosition((500 / 2) - (bounds.width / 2), 200);
+	txt_totalScore.setPosition((500 / 2) - (bounds.width / 2), 250);
 
 
 	txt_date.setString("Played on " + dayString + "." + monthString + "." + yearString + " at " + hourString + ":" + minuteString);
 	bounds = txt_date.getLocalBounds();
-	txt_date.setPosition((500 / 2) - (bounds.width / 2), 250);
+	txt_date.setPosition((500 / 2) - (bounds.width / 2), 300);
 
 }
 
@@ -365,16 +414,6 @@ void Level::writeHighScoresToFile()
 }
 
 
-// raus
-void Level::checkNewHighscore()
-{
-	if (score > currentHighscoreScore)
-	{
-		currentHighscoreScore = score;
-		currentHighscoreDate = dayString + "." + monthString + "." + yearString + " at " + hourString + ":" + minuteString;
-	}
-
-}
 
 void Level::prepareCurrentHighscore()
 {
@@ -385,9 +424,9 @@ void Level::prepareCurrentHighscore()
 
 	txt_currentHighScoreScore.setString(currentHighscoreScoreString);
 	bounds = txt_currentHighScoreScore.getLocalBounds();
-	txt_currentHighScoreScore.setPosition((500 / 2) - (bounds.width / 2), 250);
+	txt_currentHighScoreScore.setPosition((500 / 2) - (bounds.width / 2), 200);
 
 	txt_currentHighScoreDate.setString(currentHighscoreDateString);
 	bounds = txt_currentHighScoreDate.getLocalBounds();
-	txt_currentHighScoreDate.setPosition((500 / 2) - (bounds.width / 2), 300);
+	txt_currentHighScoreDate.setPosition((500 / 2) - (bounds.width / 2), 250);
 }

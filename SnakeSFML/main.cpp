@@ -246,7 +246,7 @@ int main()
 
 				window.clear();
 
-				//lvl1.checkNewHighscore();
+				
 
 				if (lvl1.score > lvl1.currentHighscoreScore)
 				{

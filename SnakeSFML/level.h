@@ -87,6 +87,7 @@ public:
 
 
 	sf::Time timeElapsed;
+	float timeElapsedSeconds;
 	sf::Clock clock;
 
 	tm nowLocal;
@@ -121,5 +122,4 @@ public:
 	void readHighScoresFromFile();
 	void writeHighScoresToFile();
 
-	void checkNewHighscore();
 };
