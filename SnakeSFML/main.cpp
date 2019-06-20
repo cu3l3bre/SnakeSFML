@@ -70,9 +70,10 @@ int main()
 						int dataposition = (row * numberCols) + col;
 						cout << results[dataposition] << "  ";
 					}
-					cout << endl << endl;
+					cout << endl;
 				}
 			}
+			cout << endl;
 
 			// Free memory
 			sqlite3_free_table(results);
@@ -130,7 +131,7 @@ int main()
 				}
 			}
 
-			// Wait for keypress of the S Key
+			// Starts the game
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) && !lvl1.gameRunning)
 			{
 				
@@ -140,7 +141,7 @@ int main()
 				lvl1.clock.restart();
 			}
 
-			// Wait for keypress of the Q Key
+			// Quits the game
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
 			{
 				window.close();
@@ -158,14 +159,14 @@ int main()
 				}
 
 
-				// Wait for keypress of the A Key
+				// Turn the snake left
 				if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) && !sf::Keyboard::isKeyPressed(sf::Keyboard::D))
 				{
 					lvl1.snake.direction -= 1;	// Cycle trough directions counterclockwise
 				}
 
 
-				// Wait for keypress of the D Key
+				// Turn the snake right
 				else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::A) && sf::Keyboard::isKeyPressed(sf::Keyboard::D))
 				{
 					lvl1.snake.direction += 1;	// Cycle trough directions clockwise
@@ -181,34 +182,20 @@ int main()
 
 				// Update the snake values, copy them before getting a new one
 				lvl1.snake.updateSnake();
-				// Set direction based on user input
+
+				// Set direction based on user input and get new value for the head
 				lvl1.snake.setSnakeDirection();
 		
-				
 				// Check if snake has found some food and let it grow
 				lvl1.checkSnakeAteFood();
-
 
 				//check if GameOver condition is satisfied
 				lvl1.checkGameOver();
 
-				/*
-
-				// Check if snake has found some food and let it grow
-				lvl1.checkSnakeAteFood();
 
 
-				// Update the snake values
-				lvl1.snake.updateSnake();
-
-
-				// Set direction based on user input
-				lvl1.snake.setSnakeDirection();
-
-				*/
 				// Clear the window
 				window.clear();
-
 
 				// Draw the boundaries that limit the map
 				for (int i = 0; i < lvl1.boundaries.size(); i++)
@@ -216,10 +203,8 @@ int main()
 					window.draw(lvl1.boundaries[i]);
 				}
 
-
 				// Draw head of the snake
 				window.draw(lvl1.snake.head);
-
 
 				// Draw the body of the snake depending on its size
 				for (int i = 0; i < lvl1.snake.snakebody.size(); i++)
@@ -227,36 +212,28 @@ int main()
 					window.draw(lvl1.snake.snakebody[i]);
 				}
 
-
 				// Draw the food
 				window.draw(lvl1.food);
 
 
-				/*
-				// check if GameOver condition is satisfied
-				lvl1.checkGameOver();
-				*/
-
 				if (lvl1.gameOver)
 				{
+					window.clear();
+
 					lvl1.calculateStats();
 					lvl1.prepareStats();
-
-					window.clear();
 
 					// Check if a new highscore has been achieved
 					if (lvl1.score > lvl1.currentHighscoreScore)
 					{
+						// Get achieved stats
 						lvl1.currentHighscoreScore = lvl1.score;
 						lvl1.currentHighscoreDate = lvl1.dayString + "." + lvl1.monthString + "." + lvl1.yearString + " at " + lvl1.hourString + ":" + lvl1.minuteString;
 						window.draw(lvl1.txt_newHighScoreAchieved);
 					}
 
-
 					// Write highscore to file
 					lvl1.writeHighScoresToFile();
-
-
 
 					// Draw the boundaries that limit the map
 					for (int i = 0; i < lvl1.boundaries.size(); i++)
@@ -278,18 +255,17 @@ int main()
 			// GameOver
 			else if (lvl1.gameOver && lvl1.gameRunning)
 			{
+				// Go back to the start menu
 				if (sf::Keyboard::isKeyPressed(sf::Keyboard::B))
 				{
-					lvl1.gameRunning = false;
-
-					// Get start values
+					
+					// Init with start values
 					lvl1 = Level(&global_font);
 
 					lvl1.readHighScoresFromFile();
 
 					lvl1.currentHighscoreScore = stoi(lvl1.fileContent[0]);
 					lvl1.currentHighscoreDate = lvl1.fileContent[1];
-
 				}
 			}
 
