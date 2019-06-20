@@ -104,6 +104,32 @@ Level::Level(sf::Font* newFont)
 	txt_date.setFillColor(sf::Color::Green);
 	txt_date.setStyle(sf::Text::Bold);
 
+
+
+
+
+	txt_currentHighScoreScore.setFont(*newFont);
+	txt_currentHighScoreScore.setString("**** Dummy currentHighScoreScore ****");
+	txt_currentHighScoreScore.setCharacterSize(20);
+	txt_currentHighScoreScore.setFillColor(sf::Color::Green);
+	txt_currentHighScoreScore.setStyle(sf::Text::Bold);
+
+	txt_currentHighScoreDate.setFont(*newFont);
+	txt_currentHighScoreDate.setString("**** Dummy currentHighScoreDate ****");
+	txt_currentHighScoreDate.setCharacterSize(20);
+	txt_currentHighScoreDate.setFillColor(sf::Color::Green);
+	txt_currentHighScoreDate.setStyle(sf::Text::Bold);
+
+
+
+
+	txt_newHighScoreAchieved.setFont(*newFont);
+	txt_newHighScoreAchieved.setString("!! Congrats, you achieved a new highscore !!");
+	txt_newHighScoreAchieved.setCharacterSize(20);
+	txt_newHighScoreAchieved.setFillColor(sf::Color::Green);
+	txt_newHighScoreAchieved.setStyle(sf::Text::Bold);
+	bounds = txt_newHighScoreAchieved.getLocalBounds();
+	txt_newHighScoreAchieved.setPosition((500 / 2) - (bounds.width / 2), 350);
 	
 }
 
@@ -332,4 +358,16 @@ void Level::writeHighScoresToFile()
 	outputFilestream << to_string(currentHighscoreScore) << endl;
 	outputFilestream << currentHighscoreDate;
 	outputFilestream.close();
+}
+
+
+
+void Level::checkNewHighscore()
+{
+	if (score > currentHighscoreScore)
+	{
+		currentHighscoreScore = score;
+		currentHighscoreDate = dayString + "." + monthString + "." + yearString + " at " + hourString + ":" + minuteString;
+	}
+
 }

@@ -29,7 +29,7 @@ int main()
 #pragma region Sql
 
 
-	// öffnen der Datenabnk
+	// open database
 
 	const char* dateiname = "Snake_Highscores.sqlite";
 
@@ -40,7 +40,7 @@ int main()
 	}
 	else {
 
-		// Objekt für die Datenbank anlegen
+		// create object for database
 		sqlite3* datenbank;
 
 		try {
@@ -52,7 +52,7 @@ int main()
 
 			char* fehlermeldung;
 
-			// Objekt für das Ergebnis vorbreiten
+			// prepare object for result
 			char ** ergebnisse = NULL;
 			int anzahlSpalten;
 			int anzahlZeilen;
@@ -61,9 +61,9 @@ int main()
 
 			int fehlercode2 = sqlite3_exec(datenbank, "INSERT INTO..", NULL, NULL, &fehlermeldung);
 
-			// wenn ein fhler aufgetreten
+			// if an error occured
 			if (fehlercode != 0) {
-				cout << "Fehler: " << fehlermeldung << endl;
+				cout << "Error: " << fehlermeldung << endl;
 			}
 			else {
 
@@ -244,14 +244,22 @@ int main()
 				lvl1.calculateStats();
 				lvl1.prepareStats();
 
+				window.clear();
+
+				//lvl1.checkNewHighscore();
+
 				if (lvl1.score > lvl1.currentHighscoreScore)
 				{
 					lvl1.currentHighscoreScore = lvl1.score;
 					lvl1.currentHighscoreDate = lvl1.dayString + "." + lvl1.monthString + "." + lvl1.yearString + " at " + lvl1.hourString + ":" + lvl1.minuteString;
+					window.draw(lvl1.txt_newHighScoreAchieved);
 				}
+
+
+
 				lvl1.writeHighScoresToFile();
 
-				window.clear();
+				
 
 				// Draw the boundaries that limit the map
 				for (int i = 0; i < lvl1.boundaries.size(); i++)

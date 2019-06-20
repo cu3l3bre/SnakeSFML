@@ -58,6 +58,10 @@ public:
 	sf::Text txt_playtimeFood;
 	sf::Text txt_totalScore;
 	sf::Text txt_date;
+	sf::Text txt_currentHighScoreScore;
+	sf::Text txt_currentHighScoreDate;
+	sf::Text txt_newHighScoreAchieved;
+
 
 
 	std::string scoreString;
@@ -68,6 +72,8 @@ public:
 	std::string dayString;
 	std::string hourString;
 	std::string minuteString;
+
+	
 
 
 
@@ -111,4 +117,6 @@ public:
 	void prepareStats();
 	void readHighScoresFromFile();
 	void writeHighScoresToFile();
+
+	void checkNewHighscore();
 };
