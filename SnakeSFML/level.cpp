@@ -33,7 +33,7 @@ Level::Level(sf::Font* newFont)
 	offsetOrigin = STEPSIZE / 2;
 
 	// Set path to highscore file (located where the main.cpp is)
-	pathToHighscoreFile = "Highsscores.txt";
+	pathToHighscoreFile = "Highscores.txt";
 
 	// Set some inital values
 	gameRunning = false;
@@ -319,7 +319,7 @@ void Level::prepareStats()
 
 	yearString = to_string(year);
 	
-	// Some if statements for a better "look" 
+	// Add 0 if the numbers are smaller 10 (like: 19.>>06<<.2019)
 	if (month > 9)
 	{
 		monthString = to_string(month);
@@ -396,6 +396,9 @@ void Level::prepareCurrentHighscore()
 void Level::readHighScoresFromFile()
 {
 	std::ifstream inputFilestream;
+	// TODO
+	try
+	{
 
 	// Open the input filestream
 	inputFilestream.open(pathToHighscoreFile);
@@ -411,6 +414,12 @@ void Level::readHighScoresFromFile()
 
 	// Close the input file stream
 	inputFilestream.close();
+
+	}
+	catch (exception ex)
+	{
+
+	}
 }
 
 

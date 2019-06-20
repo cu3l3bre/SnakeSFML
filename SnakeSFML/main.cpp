@@ -27,7 +27,6 @@ int main()
 #pragma region Sql
 
 	// Open database
-
 	const char* filename = "Snake_Highscores.sqlite";
 
 	ifstream filestream(filename);
@@ -69,18 +68,17 @@ int main()
 
 						// Calculate the postion in the results list
 						int dataposition = (row * numberCols) + col;
-
 						cout << results[dataposition] << "  ";
 					}
-
-					cout << endl;
+					cout << endl << endl;
 				}
 			}
+
 			// Free memory
 			sqlite3_free_table(results);
-
 		}
-		catch (exception ex) {
+		catch (exception ex)
+		{
 			cout << "Connection cannot be opened" << endl;
 		}
 	}
@@ -89,154 +87,128 @@ int main()
 #pragma endregion
 
 
-	// start RNG with actual time
-	srand(time(0));
-
-	try
+	//Check if the font is there
+	// if not, do not start the game; it would run, but there are no texts
+	if (!global_font.loadFromFile("arial.ttf"))
 	{
-		global_font.loadFromFile("arial.ttf");
+		cout << "Could not find file arial.ttf" << endl;
+		cout << "Please make sure this file is inside the application folder and try again" << endl << endl;
+		system("pause");
 	}
-	catch (exception& ex)
+	// Start the game
+	else
 	{
-		cout << "Could not load font arial.ttf" << endl;
-	}
+		// start RNG with actual time
+		srand(time(0));
 
-	// create the main window with its dimension and its title
-	sf::RenderWindow window(sf::VideoMode(GAMESIZE_XY, GAMESIZE_XY), "Snake Game using SFML!");
+		// create the main window with its dimension and its title
+		sf::RenderWindow window(sf::VideoMode(GAMESIZE_XY, GAMESIZE_XY), "Snake Game using SFML!");
 
-	// Frames per seconds (the number of updates each second)
-	const float FPS = 9.0f;
-	window.setFramerateLimit(FPS);
+		// Frames per seconds (the number of updates each second)
+		const float FPS = 9.0f;
+		window.setFramerateLimit(FPS);
 
-	// create a lvl object with the font as param
-	Level lvl1(&global_font);
+		// create a lvl object with the font as param
+		Level lvl1(&global_font);
 
-	
-	lvl1.readHighScoresFromFile();
-	lvl1.currentHighscoreScore = stoi(lvl1.fileContent[0]);
-	lvl1.currentHighscoreDate = lvl1.fileContent[1];
+		// Read current highscore from file
+		lvl1.readHighScoresFromFile();
+		lvl1.currentHighscoreScore = stoi(lvl1.fileContent[0]);
+		lvl1.currentHighscoreDate = lvl1.fileContent[1];
 
 
-	// Will be executed as long as the window is open
-	while (window.isOpen())
-	{
-	
-		sf::Event event;
-		while (window.pollEvent(event))
+		// Will be executed as long as the window is open
+		while (window.isOpen())
 		{
-			if ((event.type == sf::Event::Closed))
+
+			sf::Event event;
+			while (window.pollEvent(event))
+			{
+				if ((event.type == sf::Event::Closed))
+				{
+					window.close();
+				}
+			}
+
+			// Wait for keypress of the S Key
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) && !lvl1.gameRunning)
+			{
+				
+				lvl1.gameRunning = true;
+				lvl1.gameOver = false;
+				lvl1.createBoundaries();
+				lvl1.clock.restart();
+			}
+
+			// Wait for keypress of the Q Key
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
 			{
 				window.close();
 			}
-		}
 
-		// Wait for keypress of the S Key
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) && !lvl1.gameRunning)
-		{
-			lvl1.gameRunning = true;
-			lvl1.gameOver = false;
-			lvl1.createBoundaries();
-			lvl1.clock.restart();
-		}
-
-		// Wait for keypress of the Q Key
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
-		{
-			window.close();
-		}
-
-		// Game Main Loop
-		if (!lvl1.gameOver && lvl1.gameRunning)
-		{
-
-			// check if food is on field
-			if (!lvl1.foodOnField)
+			// Game Main Loop
+			if (!lvl1.gameOver && lvl1.gameRunning)
 			{
-				lvl1.generateFood();
-				lvl1.foodOnField = true;
-			}
 
-
-			// Wait for keypress of the A Key
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) && !sf::Keyboard::isKeyPressed(sf::Keyboard::D))
-			{
-				lvl1.snake.direction -= 1;	// Cycle trough directions counterclockwise
-			}
-
-
-			// Wait for keypress of the D Key
-			else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::A) && sf::Keyboard::isKeyPressed(sf::Keyboard::D))
-			{
-				lvl1.snake.direction += 1;	// Cycle trough directions clockwise
-			}
-			else
-			{
-				// Direction remains as it is
-			}
-
-
-			// Check for Direction Overflow
-			lvl1.snake.checkDirectionOverflow();
-
-
-			// Check if snake has found some food and let it grow
-			lvl1.checkSnakeAteFood();
-
-
-			// Update the snake values
-			lvl1.snake.updateSnake();
-
-			// Set direction based on user input
-			lvl1.snake.setSnakeDirection();
-
-			// Clear the window
-			window.clear();
-
-			// Draw the boundaries that limit the map
-			for (int i = 0; i < lvl1.boundaries.size(); i++)
-			{
-				window.draw(lvl1.boundaries[i]);
-			}
-
-
-			// Draw head of the snake
-			window.draw(lvl1.snake.head);
-
-
-			// Draw the body of the snake depending on its size
-			for (int i = 0; i < lvl1.snake.snakebody.size(); i++)
-			{
-				window.draw(lvl1.snake.snakebody[i]);
-			}
-
-
-			// Draw the food
-			window.draw(lvl1.food);
-
-			
-			// check if GameOver condition is satisfied
-			lvl1.checkGameOver();
-
-			if (lvl1.gameOver)
-			{
-				lvl1.calculateStats();
-				lvl1.prepareStats();
-
-				window.clear();
-
-				// Check if a new highscore has been achieved
-				if (lvl1.score > lvl1.currentHighscoreScore)
+				// check if food is on field
+				if (!lvl1.foodOnField)
 				{
-					lvl1.currentHighscoreScore = lvl1.score;
-					lvl1.currentHighscoreDate = lvl1.dayString + "." + lvl1.monthString + "." + lvl1.yearString + " at " + lvl1.hourString + ":" + lvl1.minuteString;
-					window.draw(lvl1.txt_newHighScoreAchieved);
+					lvl1.generateFood();
+					lvl1.foodOnField = true;
 				}
 
 
-				// Write highscore to file
-				lvl1.writeHighScoresToFile();
+				// Wait for keypress of the A Key
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) && !sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+				{
+					lvl1.snake.direction -= 1;	// Cycle trough directions counterclockwise
+				}
 
+
+				// Wait for keypress of the D Key
+				else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::A) && sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+				{
+					lvl1.snake.direction += 1;	// Cycle trough directions clockwise
+				}
+				else
+				{
+					// Direction remains as it is
+				}
+
+
+				// Check for Direction Overflow
+				lvl1.snake.checkDirectionOverflow();
+
+				// Update the snake values, copy them before getting a new one
+				lvl1.snake.updateSnake();
+				// Set direction based on user input
+				lvl1.snake.setSnakeDirection();
+		
 				
+				// Check if snake has found some food and let it grow
+				lvl1.checkSnakeAteFood();
+
+
+				//check if GameOver condition is satisfied
+				lvl1.checkGameOver();
+
+				/*
+
+				// Check if snake has found some food and let it grow
+				lvl1.checkSnakeAteFood();
+
+
+				// Update the snake values
+				lvl1.snake.updateSnake();
+
+
+				// Set direction based on user input
+				lvl1.snake.setSnakeDirection();
+
+				*/
+				// Clear the window
+				window.clear();
+
 
 				// Draw the boundaries that limit the map
 				for (int i = 0; i < lvl1.boundaries.size(); i++)
@@ -244,57 +216,105 @@ int main()
 					window.draw(lvl1.boundaries[i]);
 				}
 
-				window.draw(lvl1.txt_gameOver);
-				window.draw(lvl1.txt_playtimeFood);
-				window.draw(lvl1.txt_totalScore);
-				window.draw(lvl1.txt_date);
-				window.draw(lvl1.txt_instrcution3);
+
+				// Draw head of the snake
+				window.draw(lvl1.snake.head);
+
+
+				// Draw the body of the snake depending on its size
+				for (int i = 0; i < lvl1.snake.snakebody.size(); i++)
+				{
+					window.draw(lvl1.snake.snakebody[i]);
+				}
+
+
+				// Draw the food
+				window.draw(lvl1.food);
+
+
+				/*
+				// check if GameOver condition is satisfied
+				lvl1.checkGameOver();
+				*/
+
+				if (lvl1.gameOver)
+				{
+					lvl1.calculateStats();
+					lvl1.prepareStats();
+
+					window.clear();
+
+					// Check if a new highscore has been achieved
+					if (lvl1.score > lvl1.currentHighscoreScore)
+					{
+						lvl1.currentHighscoreScore = lvl1.score;
+						lvl1.currentHighscoreDate = lvl1.dayString + "." + lvl1.monthString + "." + lvl1.yearString + " at " + lvl1.hourString + ":" + lvl1.minuteString;
+						window.draw(lvl1.txt_newHighScoreAchieved);
+					}
+
+
+					// Write highscore to file
+					lvl1.writeHighScoresToFile();
+
+
+
+					// Draw the boundaries that limit the map
+					for (int i = 0; i < lvl1.boundaries.size(); i++)
+					{
+						window.draw(lvl1.boundaries[i]);
+					}
+
+					window.draw(lvl1.txt_gameOver);
+					window.draw(lvl1.txt_playtimeFood);
+					window.draw(lvl1.txt_totalScore);
+					window.draw(lvl1.txt_date);
+					window.draw(lvl1.txt_instrcution3);
+				}
+
+				// Displays the items in the window
+				window.display();
+
 			}
-
-			// Displays the items in the window
-			window.display();
-
-		}
-		// GameOver
-		else if (lvl1.gameOver && lvl1.gameRunning)
-		{
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::B))
+			// GameOver
+			else if (lvl1.gameOver && lvl1.gameRunning)
 			{
-				lvl1.gameRunning = false;
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::B))
+				{
+					lvl1.gameRunning = false;
 
-				// Get start values
-				lvl1 = Level(&global_font);
+					// Get start values
+					lvl1 = Level(&global_font);
 
-				lvl1.readHighScoresFromFile();
-			
-				lvl1.currentHighscoreScore = stoi(lvl1.fileContent[0]);
-				lvl1.currentHighscoreDate = lvl1.fileContent[1];
+					lvl1.readHighScoresFromFile();
 
+					lvl1.currentHighscoreScore = stoi(lvl1.fileContent[0]);
+					lvl1.currentHighscoreDate = lvl1.fileContent[1];
+
+				}
 			}
-		}
 
-		else
-		{
-			lvl1.createBoundaries();
-			lvl1.prepareCurrentHighscore();
-
-			window.clear();
-
-			// Draw the boundaries that limit the map
-			for (int i = 0; i < lvl1.boundaries.size(); i++)
+			else
 			{
-				window.draw(lvl1.boundaries[i]);
+				lvl1.createBoundaries();
+				lvl1.prepareCurrentHighscore();
+
+				window.clear();
+
+				// Draw the boundaries that limit the map
+				for (int i = 0; i < lvl1.boundaries.size(); i++)
+				{
+					window.draw(lvl1.boundaries[i]);
+				}
+
+				window.draw(lvl1.txt_instrcution);
+				window.draw(lvl1.txt_instrcution2);
+
+				window.draw(lvl1.txt_currentHighScoreScore);
+				window.draw(lvl1.txt_currentHighScoreDate);
+
+				window.display();
 			}
-
-			window.draw(lvl1.txt_instrcution);
-			window.draw(lvl1.txt_instrcution2);
-
-			window.draw(lvl1.txt_currentHighScoreScore);
-			window.draw(lvl1.txt_currentHighScoreDate);
-
-			window.display();
 		}
 	}
-
 	return 0;
 }
