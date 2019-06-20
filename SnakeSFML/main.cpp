@@ -105,7 +105,7 @@ int main()
 	sf::RenderWindow window(sf::VideoMode(GAMESIZE_XY, GAMESIZE_XY), "Snake Game using SFML!");
 
 	// Frames per seconds (the number of updates each second)
-	const float FPS = 8.0f;
+	const float FPS = 9.0f;
 	window.setFramerateLimit(FPS);
 
 	// create a lvl object with the font as param

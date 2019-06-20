@@ -26,23 +26,24 @@ class Level
 {
 public:
 
-	Snake snake;
+	Snake snake;	// Object of snake
 
-	Point foodLocation;
-	bool foodOnField;
-	int foodCount;
+	Point foodLocation;		// Location where the food is
+	bool foodOnField;		// State if food is on the field or not
+	int foodCount;			// Counter how much food has been eaten
 
-	bool gameRunning;
-	bool gameOver;
-	int score;
+	bool gameRunning;		// State if the game is running or not
+	bool gameOver;			// State if the game is over or not
+	int score;				// Achieved score
 	
-	std::string pathToHighscoreFile;
-	std::string oneLine;
-	std::vector<std::string> fileContent;
+	std::string pathToHighscoreFile;		// Location where the highscore file is stored
+	std::string oneLine;					// Line that has been read from the file
+	std::vector<std::string> fileContent;	// List of the lines contained in the file
 
-	int currentHighscoreScore;
-	std::string currentHighscoreDate;
+	int currentHighscoreScore;				// Current highscore listet in the file
+	std::string currentHighscoreDate;		// Current date listet in the file
 
+	// Some help variables
 	std::string scoreString;
 	std::string foodString;
 	std::string timeElapsedString;
@@ -56,13 +57,13 @@ public:
 	std::string currentHighscoreDateString;
 	
 
-	sf::Time timeElapsed;
-	float timeElapsedSeconds;
-	sf::Clock clock;
+	sf::Time timeElapsed;			// Time elapsed from start to GameOver
+	float timeElapsedSeconds;		// Time elapsed in seconds
+	sf::Clock clock;				// Used to measure the time
 
+	// Some variables to get the current date and time when the game is over
 	tm nowLocal;
 	time_t timeNow;
-	time_t gameStartTime;
 	int year;
 	int month;
 	int day;
@@ -71,17 +72,20 @@ public:
 	int seconds;
 
 
-	int circleRadius;
-	int stepSize;
-	int offsetOrigin;
+	int circleRadius;		// Radius of the circle shape
+	int stepSize;			// Stepsize how many points/ steps will make in one cycle
+	int offsetOrigin;		// Offset to the origin where the drawing of a shape will start
 
-	sf::Vector2f rectangleSize;
-	sf::RectangleShape boundary;
-	std::vector<sf::RectangleShape> boundaries;
 
-	sf::CircleShape food;
+	sf::CircleShape food;	// Object for the food which is represented by a circle
 
-	sf::FloatRect bounds;
+	sf::Vector2f rectangleSize;						// Size for one boundary, which is a rectangle (indeed its a square)
+	sf::RectangleShape boundary;					// Object for a boundary
+	std::vector<sf::RectangleShape> boundaries;		// List of rectangle shapes => boundaries
+
+	sf::FloatRect bounds;	// Used to get the bounds of the used texts to place them in the middle of the window
+
+	// Some text objects for showing texts in the main window
 	sf::Text txt_instrcution;
 	sf::Text txt_instrcution2;
 	sf::Text txt_instrcution3;

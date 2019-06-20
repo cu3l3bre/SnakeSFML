@@ -14,23 +14,28 @@
 //--------------------------------------------------------------------------------------------------
 Snake::Snake()
 {
+	// Set params for drawing stuff depending on the stepsize
 	circleRadius = STEPSIZE / 2;
 	stepSize = STEPSIZE;
 	offsetOrigin = STEPSIZE / 2;
 
+	// Set the start length of the snake
 	snakeLength = 3;
 
+	// Set the start location of the snake
 	location.row = ((stepSize / 2) + (stepSize * 10));
 	location.col = ((stepSize / 2) + (stepSize * 10));
 
+	// Set params for the snake head
 	head.setRadius(circleRadius);
 	head.setFillColor(sf::Color::Red);
 
+	// Set params for the snake body parts
 	body.setRadius(circleRadius);
 	body.setFillColor(sf::Color::Green);
 
 
-	// Generate the head and body for the snake in a vertical line
+	// Generate the head and body for the snake in a vertical line downwards
 	for (int i = 0; i < snakeLength; i++)
 	{
 		snakePoints.push_back(location);

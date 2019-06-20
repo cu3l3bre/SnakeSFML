@@ -274,7 +274,7 @@ void Level::calculateStats()
 	timeElapsedSeconds = timeElapsed.asSeconds();
 
 	timeElapsedSeconds = ceilf(timeElapsedSeconds * 100) / 100;
-	score = round((foodCount * 100) + (timeElapsedSeconds* 10));
+	score = foodCount * 100;
 
 	timeNow = time(0);
 	localtime_s(&nowLocal, &timeNow);
