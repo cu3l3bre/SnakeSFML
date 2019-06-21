@@ -124,6 +124,10 @@ Level::Level(sf::Font* newFont)
 	txt_currentHighScoreDate.setCharacterSize(20);
 	txt_currentHighScoreDate.setFillColor(sf::Color::Green);
 	txt_currentHighScoreDate.setStyle(sf::Text::Bold);
+
+	fileContent.push_back("-1");
+	fileContent.push_back("-9999");
+
 }
 
 
@@ -396,29 +400,32 @@ void Level::prepareCurrentHighscore()
 void Level::readHighScoresFromFile()
 {
 	std::ifstream inputFilestream;
-	// TODO
-	try
-	{
+	
 
 	// Open the input filestream
 	inputFilestream.open(pathToHighscoreFile);
 
-	while (inputFilestream.good()) {
-
-		// Read one line
-		getline(inputFilestream, oneLine);
-
-		// Push it at the end of the list
-		fileContent.push_back(oneLine);
-	}
-
-	// Close the input file stream
-	inputFilestream.close();
-
-	}
-	catch (exception ex)
+	if (inputFilestream.good())
 	{
+		fileContent.clear();
 
+		while (inputFilestream.good())
+		{
+
+			// Read one line
+			getline(inputFilestream, oneLine);
+
+			// Push it at the end of the list
+			fileContent.push_back(oneLine);
+		}
+
+		// Close the input file stream
+		inputFilestream.close();
+
+	}
+	else
+	{
+		cout << "File " + pathToHighscoreFile + " could not be loaded" << endl;
 	}
 }
 
